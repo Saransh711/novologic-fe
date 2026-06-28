@@ -1,12 +1,12 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { AlertCircle } from 'lucide-react';
 import type { JSONContent } from '@tiptap/react';
 import { labels, routes } from '@/config';
 import { useWorkbookQuery } from '@/lib/graphql';
 import { AppShell, type NavItem } from '@/components/layout';
 import { Button, Skeleton } from '@/components/ui';
-import { WorkbookEditor } from './WorkbookEditor';
 import { SaveStatus } from './SaveStatus';
 import { useWorkbookAutosave } from './useWorkbookAutosave';
 
@@ -29,6 +29,16 @@ function EditorSkeleton() {
     </div>
   );
 }
+
+/**
+ * The Tiptap editor relies on browser APIs and a default React import that
+ * breaks server-side module evaluation, so it is loaded client-side only. The
+ * skeleton stands in until the editor chunk has hydrated.
+ */
+const WorkbookEditor = dynamic(() => import('./WorkbookEditor').then((mod) => mod.WorkbookEditor), {
+  ssr: false,
+  loading: () => <EditorSkeleton />,
+});
 
 function LoadError({ onRetry }: { onRetry: () => void }) {
   return (

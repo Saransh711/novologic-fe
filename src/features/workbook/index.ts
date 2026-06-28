@@ -12,4 +12,5 @@ export { useWorkbookEditor } from './useWorkbookEditor';
 export type { UseWorkbookEditorOptions } from './useWorkbookEditor';
 export { useWorkbookUploads } from './useWorkbookUploads';
 export { EMPTY_DOCUMENT } from './emptyDocument';
-export type { WorkbookDocument, WorkbookUploadHandlers } from './types';
+export { PdfEmbed, PDF_EMBED_NAME } from './extensions/pdfEmbed';
+export type { ActiveUpload, WorkbookDocument, WorkbookUploadHandlers } from './types';

@@ -197,6 +197,78 @@
     outline-offset: 2px;
   }
 
+  /* Embedded-PDF node (rendered via a React node view). */
+  .workbook-pdf {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+  }
+
+  .workbook-pdf--selected {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  .workbook-pdf__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface-muted);
+  }
+
+  .workbook-pdf__icon {
+    width: var(--space-4);
+    height: var(--space-4);
+    flex-shrink: 0;
+    color: var(--color-muted);
+  }
+
+  .workbook-pdf__name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-foreground);
+  }
+
+  .workbook-pdf__open {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-8);
+    height: var(--space-8);
+    border-radius: var(--radius-md);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .workbook-pdf__open:hover {
+    color: var(--color-foreground);
+    background-color: var(--color-bg);
+  }
+
+  .workbook-pdf__open svg {
+    width: var(--space-4);
+    height: var(--space-4);
+  }
+
+  .workbook-pdf__frame {
+    display: block;
+    width: 100%;
+    height: var(--space-96);
+    border: 0;
+    background-color: var(--color-bg);
+  }
+
   /* Placeholder shown by @tiptap/extensions on the empty first block. */
   .workbook-prose__surface p.is-editor-empty:first-child::before {
     content: attr(data-placeholder);

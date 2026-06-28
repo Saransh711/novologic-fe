@@ -7,12 +7,31 @@ import type { JSONContent } from '@tiptap/react';
  */
 export type WorkbookDocument = JSONContent;
 
+/** A single attachment currently being uploaded, for progress UI. */
+export interface ActiveUpload {
+  /** Stable client-generated id for list reconciliation. */
+  id: string;
+  /** Original filename, shown while the upload is in flight. */
+  name: string;
+  /** Which kind of node the asset will become once uploaded. */
+  kind: 'image' | 'pdf';
+  /** Upload progress as a fraction in `[0, 1]`. */
+  progress: number;
+}
+
 /** Imperative file-attachment handlers surfaced by `useWorkbookUploads`. */
 export interface WorkbookUploadHandlers {
-  /** Upload an image binary and insert it as an image node. */
+  /** Upload an image binary and insert it as an image node at the cursor. */
   uploadImage: (file: File) => void;
-  /** Upload a PDF binary and insert a link to it. */
+  /** Upload a PDF binary and insert an embedded preview node at the cursor. */
   uploadPdf: (file: File) => void;
-  /** True while a binary is in flight. */
+  /**
+   * Upload one or more files, inserting each at `pos` (document position) or at
+   * the current selection when `pos` is `null`. Used by drag-and-drop / paste.
+   */
+  uploadFilesAt: (files: File[], pos: number | null) => void;
+  /** Uploads currently in flight, in insertion order. */
+  active: ActiveUpload[];
+  /** True while at least one binary is in flight. */
   isUploading: boolean;
 }

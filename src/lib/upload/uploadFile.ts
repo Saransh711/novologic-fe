@@ -40,40 +40,90 @@ function isAllowedType(type: string): type is AllowedMimeType {
   return (upload.allowedMimeTypes as readonly string[]).includes(type);
 }
 
+/**
+ * Mirrors the server allowlist so a file can be rejected before any network
+ * round-trip. Returns the failing {@link UploadErrorReason}, or `null` when the
+ * file is acceptable.
+ */
+export function validateUploadFile(file: File): Extract<UploadErrorReason, 'too-large' | 'unsupported-type'> | null {
+  if (!isAllowedType(file.type)) return 'unsupported-type';
+  if (file.size > upload.maxSizeBytes) return 'too-large';
+  return null;
+}
+
+/** Optional hooks for an in-flight upload. */
+export interface UploadOptions {
+  /** Aborts the request when signalled. */
+  signal?: AbortSignal;
+  /** Receives upload progress as a fraction in `[0, 1]` (when computable). */
+  onProgress?: (fraction: number) => void;
+}
+
 const UPLOAD_PATH = '/files/upload';
 const FORM_FIELD = 'file';
+const HTTP_OK_MIN = 200;
+const HTTP_OK_MAX = 299;
+const HTTP_PAYLOAD_TOO_LARGE = 413;
 
 /**
  * Uploads a single file and resolves with its stored location. Validates type
  * and size locally first, then throws an {@link UploadError} on any server or
- * network failure so callers can map `reason` to user-facing copy.
+ * network failure so callers can map `reason` to user-facing copy. Uses
+ * `XMLHttpRequest` rather than `fetch` so determinate progress events are
+ * available for a progress UI.
  */
-export async function uploadFile(file: File, signal?: AbortSignal): Promise<UploadedFile> {
-  if (!isAllowedType(file.type)) {
-    throw new UploadError('unsupported-type', `Unsupported file type "${file.type}".`);
+export function uploadFile(file: File, { signal, onProgress }: UploadOptions = {}): Promise<UploadedFile> {
+  const invalid = validateUploadFile(file);
+  if (invalid === 'unsupported-type') {
+    return Promise.reject(new UploadError('unsupported-type', `Unsupported file type "${file.type}".`));
   }
-  if (file.size > upload.maxSizeBytes) {
-    throw new UploadError(
-      'too-large',
-      `File size ${file.size} exceeds the limit of ${upload.maxSizeBytes} bytes.`,
+  if (invalid === 'too-large') {
+    return Promise.reject(
+      new UploadError('too-large', `File size ${file.size} exceeds the limit of ${upload.maxSizeBytes} bytes.`),
     );
   }
 
-  const body = new FormData();
-  body.append(FORM_FIELD, file);
+  return new Promise<UploadedFile>((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(new DOMException('Upload aborted.', 'AbortError'));
+      return;
+    }
 
-  let response: Response;
-  try {
-    response = await fetch(`${env.apiBaseUrl}${UPLOAD_PATH}`, { method: 'POST', body, signal });
-  } catch (error) {
-    if (error instanceof DOMException && error.name === 'AbortError') throw error;
-    throw new UploadError('network', 'Could not reach the upload service.');
-  }
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `${env.apiBaseUrl}${UPLOAD_PATH}`);
+    xhr.responseType = 'json';
 
-  if (!response.ok) {
-    const reason: UploadErrorReason = response.status === 413 ? 'too-large' : 'server';
-    throw new UploadError(reason, `Upload failed with status ${response.status}.`);
-  }
+    const onAbort = () => xhr.abort();
+    signal?.addEventListener('abort', onAbort);
+    const cleanup = () => signal?.removeEventListener('abort', onAbort);
 
-  return (await response.json()) as UploadedFile;
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) onProgress?.(event.loaded / event.total);
+    });
+
+    xhr.addEventListener('load', () => {
+      cleanup();
+      if (xhr.status >= HTTP_OK_MIN && xhr.status <= HTTP_OK_MAX) {
+        onProgress?.(1);
+        resolve(xhr.response as UploadedFile);
+        return;
+      }
+      const reason: UploadErrorReason = xhr.status === HTTP_PAYLOAD_TOO_LARGE ? 'too-large' : 'server';
+      reject(new UploadError(reason, `Upload failed with status ${xhr.status}.`));
+    });
+
+    xhr.addEventListener('error', () => {
+      cleanup();
+      reject(new UploadError('network', 'Could not reach the upload service.'));
+    });
+
+    xhr.addEventListener('abort', () => {
+      cleanup();
+      reject(new DOMException('Upload aborted.', 'AbortError'));
+    });
+
+    const body = new FormData();
+    body.append(FORM_FIELD, file);
+    xhr.send(body);
+  });
 }

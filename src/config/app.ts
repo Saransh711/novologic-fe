@@ -86,11 +86,22 @@ export const labels = {
     /** Feedback shown while/after attaching a file. */
     upload: {
       uploading: 'Uploading…',
+      uploadingFile: (name: string) => `Uploading ${name}…`,
+      progressTitle: 'Uploading attachments',
       success: 'File attached',
       failedTitle: 'Upload failed',
       tooLarge: (limit: string) => `That file is larger than the ${limit} limit.`,
       unsupported: 'That file type isn’t supported.',
       generic: 'We couldn’t attach that file. Please try again.',
+      /** Drag-and-drop overlay copy. */
+      dropTitle: 'Drop to attach',
+      dropHint: (limit: string) => `Images and PDFs up to ${limit}`,
+    },
+    /** Copy for the embedded PDF attachment node. */
+    pdf: {
+      openInNewTab: 'Open PDF in a new tab',
+      previewLabel: (name: string) => `PDF preview: ${name}`,
+      untitled: 'PDF document',
     },
   },
   /**
@@ -112,6 +123,8 @@ export const labels = {
     headingMenu: 'Text style',
     moreActions: 'More formatting options',
     saveStatus: 'Save status',
+    dropZone: 'Drop images or PDFs to attach them',
+    uploadProgress: 'Upload progress',
   },
 } as const;
 

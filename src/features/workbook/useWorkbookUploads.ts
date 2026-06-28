@@ -1,14 +1,23 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import type { Editor } from '@tiptap/react';
+import type { Editor, JSONContent } from '@tiptap/react';
 import { labels, upload } from '@/config';
 import { useToast } from '@/components/ui';
 import { useUploadFileMetadataMutation } from '@/lib/graphql';
-import { uploadFile, UploadError } from '@/lib/upload';
-import type { WorkbookUploadHandlers } from './types';
+import { uploadFile, validateUploadFile, UploadError, type UploadedFile } from '@/lib/upload';
+import { PDF_EMBED_NAME } from './extensions/pdfEmbed';
+import type { ActiveUpload, WorkbookUploadHandlers } from './types';
 
-type UploadKind = 'image' | 'pdf';
+type UploadKind = ActiveUpload['kind'];
+
+function isAbortError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'AbortError';
+}
+
+function kindOf(file: File): UploadKind {
+  return file.type === 'application/pdf' ? 'pdf' : 'image';
+}
 
 function describeError(error: unknown): string {
   if (error instanceof UploadError) {
@@ -18,12 +27,27 @@ function describeError(error: unknown): string {
   return labels.editor.upload.generic;
 }
 
+/** Builds the ProseMirror node for an uploaded asset. */
+function assetNode(asset: UploadedFile, kind: UploadKind): JSONContent {
+  if (kind === 'image') {
+    return { type: 'image', attrs: { src: asset.url, alt: asset.name } };
+  }
+  return { type: PDF_EMBED_NAME, attrs: { src: asset.url, title: asset.name } };
+}
+
+/** Inserts a node at `pos`, or at the current selection when `pos` is null. */
+function insertAsset(editor: Editor, node: JSONContent, pos: number | null) {
+  const chain = editor.chain().focus();
+  (pos == null ? chain.insertContent(node) : chain.insertContentAt(pos, node)).run();
+}
+
 /**
- * Wires the toolbar's "Upload image" / "Upload PDF" actions to the API flow:
- * the binary goes over REST (`/files/upload`); when a `projectId` is supplied
- * the returned `storageKey` is recorded via `uploadFileMetadata`; finally the
- * asset is inserted into the document — an image node for pictures, a link for
- * PDFs (which have no inline representation). Failures surface as a toast.
+ * Wires file attachments to the API flow: the binary goes over REST
+ * (`/files/upload`) with progress reporting; when a `projectId` is supplied the
+ * returned `storageKey` is recorded via `uploadFileMetadata`; finally the asset
+ * is inserted into the document — an image node for pictures, an embedded PDF
+ * preview node for documents. Invalid files are rejected up front with a toast,
+ * and in-flight uploads are tracked in `active` for a progress UI.
  */
 export function useWorkbookUploads(
   editor: Editor | null,
@@ -31,14 +55,31 @@ export function useWorkbookUploads(
 ): WorkbookUploadHandlers {
   const { toast } = useToast();
   const [recordMetadata] = useUploadFileMetadataMutation();
-  const [isUploading, setIsUploading] = useState(false);
+  const [active, setActive] = useState<ActiveUpload[]>([]);
 
-  const handle = useCallback(
-    async (file: File, kind: UploadKind) => {
+  const handleOne = useCallback(
+    async (file: File, pos: number | null) => {
       if (!editor) return;
-      setIsUploading(true);
+
+      const invalid = validateUploadFile(file);
+      if (invalid) {
+        toast({
+          variant: 'danger',
+          title: labels.editor.upload.failedTitle,
+          description: describeError(new UploadError(invalid, '')),
+        });
+        return;
+      }
+
+      const id = crypto.randomUUID();
+      const kind = kindOf(file);
+      setActive((prev) => [...prev, { id, name: file.name, kind, progress: 0 }]);
+
       try {
-        const asset = await uploadFile(file);
+        const asset = await uploadFile(file, {
+          onProgress: (progress) =>
+            setActive((prev) => prev.map((item) => (item.id === id ? { ...item, progress } : item))),
+        });
 
         if (projectId) {
           await recordMetadata({
@@ -54,29 +95,7 @@ export function useWorkbookUploads(
           });
         }
 
-        if (kind === 'image') {
-          editor.chain().focus().setImage({ src: asset.url, alt: asset.name }).run();
-        } else {
-          editor
-            .chain()
-            .focus()
-            .insertContent({
-              type: 'paragraph',
-              content: [
-                {
-                  type: 'text',
-                  text: asset.name,
-                  marks: [
-                    {
-                      type: 'link',
-                      attrs: { href: asset.url, target: '_blank', rel: 'noopener noreferrer' },
-                    },
-                  ],
-                },
-              ],
-            })
-            .run();
-        }
+        insertAsset(editor, assetNode(asset, kind), pos);
 
         toast({
           variant: 'success',
@@ -84,21 +103,28 @@ export function useWorkbookUploads(
           description: asset.name,
         });
       } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError') return;
+        if (isAbortError(error)) return;
         toast({
           variant: 'danger',
           title: labels.editor.upload.failedTitle,
           description: describeError(error),
         });
       } finally {
-        setIsUploading(false);
+        setActive((prev) => prev.filter((item) => item.id !== id));
       }
     },
     [editor, projectId, recordMetadata, toast],
   );
 
-  const uploadImage = useCallback((file: File) => void handle(file, 'image'), [handle]);
-  const uploadPdf = useCallback((file: File) => void handle(file, 'pdf'), [handle]);
+  const uploadFilesAt = useCallback(
+    (files: File[], pos: number | null) => {
+      files.forEach((file) => void handleOne(file, pos));
+    },
+    [handleOne],
+  );
 
-  return { uploadImage, uploadPdf, isUploading };
+  const uploadImage = useCallback((file: File) => void handleOne(file, null), [handleOne]);
+  const uploadPdf = useCallback((file: File) => void handleOne(file, null), [handleOne]);
+
+  return { uploadImage, uploadPdf, uploadFilesAt, active, isUploading: active.length > 0 };
 }
