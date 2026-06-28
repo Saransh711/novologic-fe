@@ -1,0 +1,88 @@
+'use client';
+
+import { motion } from 'motion/react';
+import { FileUp, History, NotebookPen, Save } from 'lucide-react';
+import { app, editor, labels, upload } from '@/config';
+import { fadeInUp, staggerContainer } from '@/design/motion';
+import { Button, Card, CardDescription, CardHeader, CardTitle, ThemeToggle } from '@/components/ui';
+
+const features = [
+  {
+    icon: Save,
+    title: 'Effortless autosave',
+    description: `Your work is saved automatically as you type — no save button, no lost ideas.`,
+  },
+  {
+    icon: History,
+    title: 'Version history',
+    description: `Every save keeps your last ${editor.maxVersions} snapshots so you can step back anytime.`,
+  },
+  {
+    icon: FileUp,
+    title: 'Rich attachments',
+    description: `Drop in images and PDFs up to ${upload.maxSizeLabel} right inside your workbook.`,
+  },
+] as const;
+
+export function LandingView() {
+  return (
+    <div className="mx-auto flex min-h-dvh max-w-5xl flex-col px-6 py-8 sm:px-8">
+      <header className="flex items-center justify-between">
+        <span className="inline-flex items-center gap-2 font-semibold text-foreground">
+          <NotebookPen className="h-5 w-5 text-primary" aria-hidden />
+          {app.name}
+        </span>
+        <ThemeToggle />
+      </header>
+
+      <motion.main
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="flex flex-1 flex-col items-center justify-center py-16 text-center"
+      >
+        <motion.h1
+          variants={fadeInUp}
+          className="max-w-2xl text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl"
+        >
+          {app.tagline}
+        </motion.h1>
+        <motion.p variants={fadeInUp} className="mt-4 max-w-xl text-lg text-muted">
+          {app.description}
+        </motion.p>
+        <motion.div
+          variants={fadeInUp}
+          className="mt-8 flex flex-wrap items-center justify-center gap-3"
+        >
+          <Button size="lg">{labels.actions.newProject}</Button>
+          <Button size="lg" variant="secondary">
+            {labels.actions.openWorkbook}
+          </Button>
+        </motion.div>
+
+        <motion.section
+          variants={staggerContainer}
+          className="mt-16 grid w-full gap-4 sm:grid-cols-3"
+        >
+          {features.map(({ icon: Icon, title, description }) => (
+            <motion.div key={title} variants={fadeInUp} className="h-full">
+              <Card className="h-full text-left transition-shadow duration-base ease-standard hover:shadow-md">
+                <CardHeader>
+                  <span className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-surface-muted text-primary">
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <CardTitle>{title}</CardTitle>
+                  <CardDescription>{description}</CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.section>
+      </motion.main>
+
+      <footer className="border-t border-border py-6 text-center text-sm text-muted">
+        {app.name} — {app.shortName} workspace
+      </footer>
+    </div>
+  );
+}

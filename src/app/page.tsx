@@ -1,7 +1,5 @@
-export default function Home() {
-  return (
-    <main>
-      <div>Hello world!</div>
-    </main>
-  );
+import { LandingView } from '@/features/landing/LandingView';
+
+export default function HomePage() {
+  return <LandingView />;
 }

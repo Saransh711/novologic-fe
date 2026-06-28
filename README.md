@@ -1,34 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Workbook Web
 
-## Getting Started
+Frontend for the **Online Workbook** product — a focused, autosaving rich-text
+workbook. Built with Next.js (App Router), TypeScript, Tailwind CSS v4, Apollo
+Client, and Framer Motion.
 
-First, run the development server:
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # point at your running workbook API
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The API is expected at `NEXT_PUBLIC_GRAPHQL_URL` (defaults to
+`http://localhost:3000/graphql`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-## Learn More
+| Script                 | Purpose                                  |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | Start the dev server                     |
+| `npm run build`        | Production build                         |
+| `npm run start`        | Serve the production build               |
+| `npm run lint`         | ESLint (Next + TypeScript rules)         |
+| `npm run typecheck`    | TypeScript type checking                 |
+| `npm run format`       | Format with Prettier                     |
+| `npm run format:check` | Verify formatting                        |
 
-To learn more about Next.js, take a look at the following resources:
+## Architecture
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Feature-based structure under `src/`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+  app/            App Router routes, root layout, global stylesheet
+  components/ui/  Reusable presentational primitives (Button, Card, …)
+  config/         App constants: copy, routes, autosave, upload limits, env
+  design/         Design tokens + CSS-variable generator + motion presets
+  features/       Domain UI + logic (e.g. landing)
+  lib/            Clients & utilities (Apollo, theme, cn)
+```
 
-## Deploy on Vercel
+## Design system — one source of truth
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Every visual value originates in **`src/design/tokens.ts`** (colour, typography,
+spacing, radii, shadows, z-index, breakpoints, motion).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/design/css-variables.ts` turns those tokens into CSS custom properties
+  (`:root` light theme + a dark variant under `[data-theme='dark']`, falling
+  back to `prefers-color-scheme`). It also exposes `var(--…)` reference maps.
+- `tailwind.config.ts` builds its **entire** theme from those reference maps, so
+  utilities like `bg-primary`, `p-4`, and `rounded-lg` resolve to runtime
+  variables — there are no raw hex/px values in components or config.
+- `src/design/ThemeStyle.tsx` injects the generated variables once in the layout
+  `<head>`.
+
+Changing the look means editing tokens only. User-facing copy and constants live
+in `src/config` and are never inlined in components.
+
+## Data
+
+Server state flows through Apollo Client. Use the RSC client from
+`src/lib/apollo/client.ts` (`getClient`/`query`/`PreloadQuery`) in server
+components and the hooks via the `ApolloWrapper` provider in client components.
