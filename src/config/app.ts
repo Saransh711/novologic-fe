@@ -117,6 +117,8 @@ export const labels = {
     dismissNotification: 'Dismiss notification',
     notifications: 'Notifications',
     home: 'Go to home',
+    switchToLight: 'Switch to light theme',
+    switchToDark: 'Switch to dark theme',
     toolbar: 'Toolbar',
     editorRegion: 'Workbook editor',
     formattingToolbar: 'Formatting',

@@ -19,14 +19,14 @@ export function CardHeader({ className, ...props }: DivProps) {
 export function CardTitle({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn('text-lg font-semibold leading-snug text-foreground', className)}
+      className={cn('text-lg font-semibold leading-snug text-balance text-foreground', className)}
       {...props}
     />
   );
 }
 
 export function CardDescription({ className, ...props }: HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-sm text-muted', className)} {...props} />;
+  return <p className={cn('text-sm text-pretty text-muted', className)} {...props} />;
 }
 
 export function CardContent({ className, ...props }: DivProps) {

@@ -107,10 +107,10 @@ export function ProjectsView() {
     <AppShell navItems={navItems}>
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
         <header className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-balance text-foreground">
             {labels.projects.title}
           </h1>
-          <p className="text-sm text-muted">{labels.projects.subtitle}</p>
+          <p className="text-sm text-pretty text-muted">{labels.projects.subtitle}</p>
         </header>
 
         {loading ? (

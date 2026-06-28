@@ -199,12 +199,17 @@ const radii = {
   full: '9999px',
 } as const;
 
+/**
+ * Elevation scale. Each level layers a tight contact shadow over a softer
+ * ambient one so depth reads naturally rather than as a single flat blur — the
+ * higher the level, the further the surface lifts off the page.
+ */
 const shadows = {
   none: 'none',
-  sm: '0 1px 2px 0 rgb(15 23 42 / 0.06)',
-  md: '0 4px 12px -2px rgb(15 23 42 / 0.10)',
-  lg: '0 12px 28px -8px rgb(15 23 42 / 0.18)',
-  xl: '0 24px 48px -12px rgb(15 23 42 / 0.25)',
+  sm: '0 1px 1px -0.5px rgb(15 23 42 / 0.05), 0 1px 3px -1px rgb(15 23 42 / 0.07)',
+  md: '0 2px 4px -2px rgb(15 23 42 / 0.07), 0 6px 16px -4px rgb(15 23 42 / 0.10)',
+  lg: '0 4px 8px -4px rgb(15 23 42 / 0.08), 0 16px 32px -8px rgb(15 23 42 / 0.16)',
+  xl: '0 8px 16px -8px rgb(15 23 42 / 0.10), 0 32px 56px -16px rgb(15 23 42 / 0.22)',
 } as const;
 
 /** Stacking order layers. Higher value sits on top. */

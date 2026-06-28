@@ -49,11 +49,11 @@ export function LandingView() {
       >
         <motion.h1
           variants={fadeInUp}
-          className="max-w-2xl text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl"
+          className="max-w-2xl text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl"
         >
           {app.tagline}
         </motion.h1>
-        <motion.p variants={fadeInUp} className="mt-4 max-w-xl text-lg text-muted">
+        <motion.p variants={fadeInUp} className="mt-4 max-w-xl text-pretty text-lg text-muted">
           {app.description}
         </motion.p>
         <motion.div
