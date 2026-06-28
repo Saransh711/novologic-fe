@@ -17,7 +17,18 @@ export const upload = {
   ] as const,
 } as const;
 
+export type AllowedMimeType = (typeof upload.allowedMimeTypes)[number];
+
+/** The image subset of the allowlist (everything except PDF). */
+export const imageMimeTypes = upload.allowedMimeTypes.filter(
+  (type): type is Exclude<AllowedMimeType, 'application/pdf'> => type !== 'application/pdf',
+);
+
 /** Value for an `<input type="file" accept="…">` attribute. */
 export const uploadAccept = upload.allowedMimeTypes.join(',');
 
-export type AllowedMimeType = (typeof upload.allowedMimeTypes)[number];
+/** `accept` value restricting a picker to allowlisted image types. */
+export const imageAccept = imageMimeTypes.join(',');
+
+/** `accept` value restricting a picker to PDF files. */
+export const pdfAccept = 'application/pdf';

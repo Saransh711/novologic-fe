@@ -43,6 +43,56 @@ export const labels = {
     emptyProjects: 'No projects yet. Create your first one to get started.',
     emptyWorkbook: 'This workbook is empty. Start typing to add content.',
   },
+  /** Copy for the projects list page. */
+  projects: {
+    title: 'Projects',
+    subtitle: 'Open a project to start writing in its workbook.',
+    createdLabel: 'Created',
+    errorTitle: 'Couldn’t load your projects',
+    openWorkbookFor: (name: string) => `Open the ${name} workbook`,
+  },
+  /** Copy for the workbook page surrounding the editor. */
+  workbook: {
+    title: 'Workbook',
+    subtitle: 'Your notes autosave as you type.',
+    loadErrorTitle: 'Couldn’t load this workbook',
+  },
+  /** Copy for the rich-text workbook editor and its toolbar. */
+  editor: {
+    /** Visible/labelling text for each formatting control. */
+    actions: {
+      bold: 'Bold',
+      italic: 'Italic',
+      underline: 'Underline',
+      heading: 'Heading',
+      bulletList: 'Bullet list',
+      numberedList: 'Numbered list',
+      uploadImage: 'Upload image',
+      uploadPdf: 'Upload PDF',
+      undo: 'Undo',
+      redo: 'Redo',
+      more: 'More formatting',
+    },
+    /** Block-type names shown in the heading menu. */
+    blockTypes: {
+      paragraph: 'Paragraph',
+      heading: (level: number) => `Heading ${level}`,
+    },
+    /** Section headings inside the overflow menu. */
+    groups: {
+      lists: 'Lists',
+      insert: 'Insert',
+    },
+    /** Feedback shown while/after attaching a file. */
+    upload: {
+      uploading: 'Uploading…',
+      success: 'File attached',
+      failedTitle: 'Upload failed',
+      tooLarge: (limit: string) => `That file is larger than the ${limit} limit.`,
+      unsupported: 'That file type isn’t supported.',
+      generic: 'We couldn’t attach that file. Please try again.',
+    },
+  },
   /**
    * Accessible names for icon-only controls and assistive-tech landmarks. These
    * are never shown visually but are essential for screen-reader users.
@@ -57,6 +107,11 @@ export const labels = {
     notifications: 'Notifications',
     home: 'Go to home',
     toolbar: 'Toolbar',
+    editorRegion: 'Workbook editor',
+    formattingToolbar: 'Formatting',
+    headingMenu: 'Text style',
+    moreActions: 'More formatting options',
+    saveStatus: 'Save status',
   },
 } as const;
 

@@ -1,8 +1,9 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import { FileUp, History, NotebookPen, Save } from 'lucide-react';
-import { app, editor, labels, upload } from '@/config';
+import { app, editor, labels, routes, upload } from '@/config';
 import { fadeInUp, staggerContainer } from '@/design/motion';
 import { Button, Card, CardDescription, CardHeader, CardTitle, ThemeToggle } from '@/components/ui';
 import { UserInfoPanel } from '@/features/user';
@@ -26,6 +27,8 @@ const features = [
 ] as const;
 
 export function LandingView() {
+  const router = useRouter();
+
   return (
     <div className="mx-auto flex min-h-dvh max-w-5xl flex-col px-6 py-8 sm:px-8">
       <header className="flex items-center justify-between">
@@ -57,8 +60,7 @@ export function LandingView() {
           variants={fadeInUp}
           className="mt-8 flex flex-wrap items-center justify-center gap-3"
         >
-          <Button size="lg">{labels.actions.newProject}</Button>
-          <Button size="lg" variant="secondary">
+          <Button size="lg" onClick={() => router.push(routes.projects)}>
             {labels.actions.openWorkbook}
           </Button>
         </motion.div>

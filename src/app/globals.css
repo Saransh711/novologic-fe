@@ -121,6 +121,92 @@
   }
 }
 
+/* Workbook editor content. Tailwind's preflight strips list and heading styling,
+   so the rich-text surface restores it here — every value resolves to a design
+   token variable so the prose matches the rest of the system and themes. */
+@layer components {
+  .workbook-prose__surface {
+    min-height: var(--space-64);
+    padding: var(--space-4);
+    outline: none;
+    color: var(--color-foreground);
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+  }
+
+  .workbook-prose__surface > * + * {
+    margin-top: var(--space-3);
+  }
+
+  .workbook-prose__surface h1 {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .workbook-prose__surface h2 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--leading-snug);
+  }
+
+  .workbook-prose__surface h3 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--leading-snug);
+  }
+
+  .workbook-prose__surface ul,
+  .workbook-prose__surface ol {
+    padding-left: var(--space-6);
+  }
+
+  .workbook-prose__surface ul {
+    list-style: disc;
+  }
+
+  .workbook-prose__surface ol {
+    list-style: decimal;
+  }
+
+  .workbook-prose__surface li {
+    margin-top: var(--space-1);
+  }
+
+  .workbook-prose__surface li > ul,
+  .workbook-prose__surface li > ol {
+    margin-top: var(--space-1);
+  }
+
+  .workbook-prose__surface a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .workbook-prose__surface img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+  }
+
+  .workbook-prose__surface img.ProseMirror-selectednode {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  /* Placeholder shown by @tiptap/extensions on the empty first block. */
+  .workbook-prose__surface p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: var(--color-muted);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
