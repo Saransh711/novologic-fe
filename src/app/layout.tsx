@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { app } from '@/config';
 import { ThemeStyle } from '@/design/ThemeStyle';
+import { UiProviders } from '@/components/providers/UiProviders';
 import { ApolloWrapper } from '@/lib/apollo/ApolloWrapper';
 import { themeInitScript } from '@/lib/theme';
 
@@ -25,7 +26,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-dvh bg-bg text-foreground">
-        <ApolloWrapper>{children}</ApolloWrapper>
+        <ApolloWrapper>
+          <UiProviders>{children}</UiProviders>
+        </ApolloWrapper>
       </body>
     </html>
   );

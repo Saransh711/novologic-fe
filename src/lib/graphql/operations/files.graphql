@@ -1,0 +1,15 @@
+# File metadata mutations. Binary transfer happens over REST (POST /files/upload);
+# `uploadFileMetadata` records the returned storageKey against the project, and
+# `deleteFile` removes both the record and its stored binary.
+
+mutation UploadFileMetadata($input: UploadFileMetadataInput!) {
+  uploadFileMetadata(input: $input) {
+    ...FileFields
+  }
+}
+
+mutation DeleteFile($id: ID!) {
+  deleteFile(id: $id) {
+    ...FileFields
+  }
+}

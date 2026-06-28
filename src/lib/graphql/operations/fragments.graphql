@@ -1,0 +1,35 @@
+# Reusable field selections shared across operations. Keeping selections in
+# fragments guarantees every query/mutation returns a consistent shape and that
+# adding a field is a one-line change.
+
+fragment ProjectFields on Project {
+  id
+  userId
+  name
+  createdAt
+}
+
+fragment WorkbookFields on Workbook {
+  id
+  projectId
+  content
+  createdAt
+  updatedAt
+}
+
+fragment WorkbookVersionFields on WorkbookVersion {
+  id
+  workbookId
+  content
+  createdAt
+}
+
+fragment FileFields on File {
+  id
+  projectId
+  name
+  mimeType
+  size
+  storageKey
+  createdAt
+}

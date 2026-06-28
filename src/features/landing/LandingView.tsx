@@ -1,10 +1,12 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
 import { FileUp, History, NotebookPen, Save } from 'lucide-react';
-import { app, editor, labels, upload } from '@/config';
+import { app, editor, labels, routes, upload } from '@/config';
 import { fadeInUp, staggerContainer } from '@/design/motion';
 import { Button, Card, CardDescription, CardHeader, CardTitle, ThemeToggle } from '@/components/ui';
+import { UserInfoPanel } from '@/features/user';
 
 const features = [
   {
@@ -25,6 +27,8 @@ const features = [
 ] as const;
 
 export function LandingView() {
+  const router = useRouter();
+
   return (
     <div className="mx-auto flex min-h-dvh max-w-5xl flex-col px-6 py-8 sm:px-8">
       <header className="flex items-center justify-between">
@@ -35,6 +39,8 @@ export function LandingView() {
         <ThemeToggle />
       </header>
 
+      <UserInfoPanel className="mt-6" />
+
       <motion.main
         variants={staggerContainer}
         initial="hidden"
@@ -43,19 +49,18 @@ export function LandingView() {
       >
         <motion.h1
           variants={fadeInUp}
-          className="max-w-2xl text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl"
+          className="max-w-2xl text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl"
         >
           {app.tagline}
         </motion.h1>
-        <motion.p variants={fadeInUp} className="mt-4 max-w-xl text-lg text-muted">
+        <motion.p variants={fadeInUp} className="mt-4 max-w-xl text-pretty text-lg text-muted">
           {app.description}
         </motion.p>
         <motion.div
           variants={fadeInUp}
           className="mt-8 flex flex-wrap items-center justify-center gap-3"
         >
-          <Button size="lg">{labels.actions.newProject}</Button>
-          <Button size="lg" variant="secondary">
+          <Button size="lg" onClick={() => router.push(routes.projects)}>
             {labels.actions.openWorkbook}
           </Button>
         </motion.div>

@@ -1,13 +1,6 @@
-/**
- * Upload constraints. These mirror the API allowlist (images + PDF, 10 MiB) so
- * the client can reject invalid files before they ever reach the server.
- */
 export const upload = {
-  /** Maximum accepted file size in bytes (10 MiB). */
   maxSizeBytes: 10 * 1024 * 1024,
-  /** Human-readable size limit for UI copy. */
   maxSizeLabel: '10 MB',
-  /** Allowlisted IANA media types. */
   allowedMimeTypes: [
     'image/png',
     'image/jpeg',
@@ -17,7 +10,14 @@ export const upload = {
   ] as const,
 } as const;
 
-/** Value for an `<input type="file" accept="…">` attribute. */
+export type AllowedMimeType = (typeof upload.allowedMimeTypes)[number];
+
+export const imageMimeTypes = upload.allowedMimeTypes.filter(
+  (type): type is Exclude<AllowedMimeType, 'application/pdf'> => type !== 'application/pdf',
+);
+
 export const uploadAccept = upload.allowedMimeTypes.join(',');
 
-export type AllowedMimeType = (typeof upload.allowedMimeTypes)[number];
+export const imageAccept = imageMimeTypes.join(',');
+
+export const pdfAccept = 'application/pdf';

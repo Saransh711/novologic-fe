@@ -1,0 +1,26 @@
+# Reads the workbook for a project (null when none exists yet) and its archived
+# version history.
+
+query Workbook($projectId: ID!) {
+  workbook(projectId: $projectId) {
+    ...WorkbookFields
+  }
+}
+
+query WorkbookVersions($workbookId: ID!) {
+  workbookVersions(workbookId: $workbookId) {
+    ...WorkbookVersionFields
+  }
+}
+
+mutation SaveWorkbook($input: SaveWorkbookInput!) {
+  saveWorkbook(input: $input) {
+    ...WorkbookFields
+  }
+}
+
+mutation RestoreWorkbookVersion($versionId: ID!) {
+  restoreWorkbookVersion(versionId: $versionId) {
+    ...WorkbookFields
+  }
+}

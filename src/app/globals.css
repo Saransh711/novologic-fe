@@ -1,9 +1,6 @@
 @config '../../tailwind.config.ts';
 @import 'tailwindcss';
 
-/* Dark mode is opt-in via `data-theme='dark'` on the document element. The token
-   variables flip values under that selector, so semantic utilities adapt
-   automatically; the `dark:` variant is available for the rare explicit case. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 @layer base {
@@ -37,5 +34,326 @@
   :focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .anim-overlay[data-state='open'] {
+    animation: fade-in var(--duration-base) var(--ease-standard);
+  }
+  .anim-overlay[data-state='closed'] {
+    animation: fade-out var(--duration-fast) var(--ease-standard);
+  }
+
+  .anim-dialog[data-state='open'] {
+    animation: dialog-in var(--duration-base) var(--ease-emphasized);
+  }
+  .anim-dialog[data-state='closed'] {
+    animation: dialog-out var(--duration-fast) var(--ease-standard);
+  }
+
+  .anim-sheet-right[data-state='open'] {
+    animation: slide-in-right var(--duration-base) var(--ease-emphasized);
+  }
+  .anim-sheet-right[data-state='closed'] {
+    animation: slide-out-right var(--duration-base) var(--ease-standard);
+  }
+  .anim-sheet-left[data-state='open'] {
+    animation: slide-in-left var(--duration-base) var(--ease-emphasized);
+  }
+  .anim-sheet-left[data-state='closed'] {
+    animation: slide-out-left var(--duration-base) var(--ease-standard);
+  }
+
+  .anim-tooltip[data-state='delayed-open'] {
+    animation: pop-in var(--duration-fast) var(--ease-standard);
+  }
+  .anim-tooltip[data-state='instant-open'] {
+    animation: pop-in var(--duration-fast) var(--ease-standard);
+  }
+
+  .anim-menu {
+    transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+  }
+  .anim-menu[data-state='open'] {
+    animation: pop-in var(--duration-fast) var(--ease-standard);
+  }
+  .anim-menu[data-state='closed'] {
+    animation: fade-out var(--duration-fast) var(--ease-standard);
+  }
+
+  .toast-root[data-state='open'] {
+    animation: slide-in-right var(--duration-base) var(--ease-emphasized);
+  }
+  .toast-root[data-state='closed'] {
+    animation: fade-out var(--duration-fast) var(--ease-standard);
+  }
+  .toast-root[data-swipe='move'] {
+    transform: translateX(var(--radix-toast-swipe-move-x));
+  }
+  .toast-root[data-swipe='cancel'] {
+    transform: translateX(0);
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+  .toast-root[data-swipe='end'] {
+    animation: slide-out-right var(--duration-base) var(--ease-standard);
+  }
+}
+
+@layer components {
+  .workbook-prose__surface {
+    min-height: var(--space-64);
+    padding: var(--space-4);
+    outline: none;
+    color: var(--color-foreground);
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+  }
+
+  .workbook-prose__surface > * + * {
+    margin-top: var(--space-3);
+  }
+
+  .workbook-prose__surface h1 {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .workbook-prose__surface h2 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--leading-snug);
+  }
+
+  .workbook-prose__surface h3 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--leading-snug);
+  }
+
+  .workbook-prose__surface ul,
+  .workbook-prose__surface ol {
+    padding-left: var(--space-6);
+  }
+
+  .workbook-prose__surface ul {
+    list-style: disc;
+  }
+
+  .workbook-prose__surface ol {
+    list-style: decimal;
+  }
+
+  .workbook-prose__surface li {
+    margin-top: var(--space-1);
+  }
+
+  .workbook-prose__surface li > ul,
+  .workbook-prose__surface li > ol {
+    margin-top: var(--space-1);
+  }
+
+  .workbook-prose__surface a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .workbook-prose__surface img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+  }
+
+  .workbook-prose__surface img.ProseMirror-selectednode {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  .workbook-pdf {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+  }
+
+  .workbook-pdf--selected {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  .workbook-pdf__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface-muted);
+  }
+
+  .workbook-pdf__icon {
+    width: var(--space-4);
+    height: var(--space-4);
+    flex-shrink: 0;
+    color: var(--color-muted);
+  }
+
+  .workbook-pdf__name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-foreground);
+  }
+
+  .workbook-pdf__open {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-8);
+    height: var(--space-8);
+    border-radius: var(--radius-md);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  @media (pointer: coarse) {
+    .workbook-pdf__open {
+      width: var(--space-11);
+      height: var(--space-11);
+    }
+  }
+
+  .workbook-pdf__open:hover {
+    color: var(--color-foreground);
+    background-color: var(--color-bg);
+  }
+
+  .workbook-pdf__open svg {
+    width: var(--space-4);
+    height: var(--space-4);
+  }
+
+  .workbook-pdf__frame {
+    display: block;
+    width: 100%;
+    height: var(--space-96);
+    border: 0;
+    background-color: var(--color-bg);
+  }
+
+  .workbook-prose__surface p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: var(--color-muted);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dialog-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.97);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

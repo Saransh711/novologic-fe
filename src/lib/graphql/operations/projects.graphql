@@ -1,0 +1,8 @@
+# Lists projects oldest-first with pagination. NOTE: the frozen contract exposes
+# no `project(id)` query — a single project is read from this list by id.
+
+query Projects($skip: Int! = 0, $take: Int! = 20) {
+  projects(skip: $skip, take: $take) {
+    ...ProjectFields
+  }
+}

@@ -1,40 +1,66 @@
-import { forwardRef, type ButtonHTMLAttributes } from 'react';
+import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
+import { interactiveVariant, pressableBase, type InteractiveVariant } from './styles';
+import { Spinner } from './spinner';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+export type ButtonVariant = InteractiveVariant;
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
-const base =
-  'inline-flex items-center justify-center gap-2 font-medium select-none whitespace-nowrap rounded-lg transition-colors duration-base ease-standard focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50';
-
-const variantClasses: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-primary-foreground shadow-sm hover:opacity-90',
-  secondary: 'border border-border bg-surface text-foreground hover:bg-surface-muted',
-  ghost: 'text-foreground hover:bg-surface-muted',
-  danger: 'bg-danger text-danger-foreground shadow-sm hover:opacity-90',
+const sizeClasses: Record<ButtonSize, string> = {
+  sm: 'h-8 rounded-md px-3 text-sm',
+  md: 'h-10 rounded-lg px-4 text-sm',
+  lg: 'h-12 rounded-lg px-6 text-base',
 };
 
-const sizeClasses: Record<ButtonSize, string> = {
-  sm: 'h-8 px-3 text-sm',
-  md: 'h-10 px-4 text-sm',
-  lg: 'h-12 px-6 text-base',
+const spinnerSize: Record<ButtonSize, 'sm' | 'md'> = {
+  sm: 'sm',
+  md: 'sm',
+  lg: 'md',
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  fullWidth?: boolean;
+  isLoading?: boolean;
+  leadingIcon?: ReactNode;
+  trailingIcon?: ReactNode;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', className, type = 'button', ...props },
+  {
+    variant = 'primary',
+    size = 'md',
+    fullWidth = false,
+    isLoading = false,
+    leadingIcon,
+    trailingIcon,
+    className,
+    type = 'button',
+    disabled,
+    children,
+    ...props
+  },
   ref,
 ) {
   return (
     <button
       ref={ref}
       type={type}
-      className={cn(base, variantClasses[variant], sizeClasses[size], className)}
+      disabled={disabled || isLoading}
+      aria-busy={isLoading || undefined}
+      className={cn(
+        pressableBase,
+        interactiveVariant[variant],
+        sizeClasses[size],
+        fullWidth && 'w-full',
+        className,
+      )}
       {...props}
-    />
+    >
+      {isLoading ? <Spinner size={spinnerSize[size]} /> : leadingIcon}
+      {children}
+      {!isLoading && trailingIcon}
+    </button>
   );
 });
