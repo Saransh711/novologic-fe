@@ -90,7 +90,12 @@ export function useWorkbookEditor({
   useEffect(() => {
     if (!editor || content == null) return;
     if (JSON.stringify(editor.getJSON()) === JSON.stringify(content)) return;
-    editor.commands.setContent(content, { emitUpdate: false });
+    // `setContent` calls `flushSync` internally; defer it to a microtask so it
+    // doesn't run while React is still rendering this effect.
+    queueMicrotask(() => {
+      if (editor.isDestroyed) return;
+      editor.commands.setContent(content, { emitUpdate: false });
+    });
   }, [editor, content]);
 
   return editor;
