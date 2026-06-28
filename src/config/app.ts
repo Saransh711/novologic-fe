@@ -56,6 +56,33 @@ export const labels = {
     title: 'Workbook',
     subtitle: 'Your notes autosave as you type.',
     loadErrorTitle: 'Couldn’t load this workbook',
+    /** AI summary generation surfaced above the editor. */
+    aiSummary: {
+      generate: 'Generate Summary',
+      generating: 'Generating…',
+      heading: 'AI Summary',
+      successTitle: 'Summary added',
+      successBody: 'An AI summary was appended to the end of your workbook.',
+      errorTitle: 'Couldn’t generate a summary',
+      errorBody: 'Something went wrong. Please try again.',
+    },
+    /** Version history panel listing recent snapshots. */
+    versions: {
+      open: 'Version history',
+      title: 'Version history',
+      description: 'Restore an earlier snapshot of this workbook. The last 5 versions are kept.',
+      restore: 'Restore',
+      restoring: 'Restoring…',
+      versionLabel: (position: number) => `Version ${position}`,
+      savedLabel: 'Saved',
+      empty: 'No previous versions yet. A snapshot is saved automatically each time your workbook changes.',
+      unavailable: 'Make and save a change first to start building version history.',
+      errorTitle: 'Couldn’t load version history',
+      restoredTitle: 'Version restored',
+      restoredBody: 'Your workbook was rolled back to the selected version.',
+      restoreErrorTitle: 'Couldn’t restore that version',
+      restoreErrorBody: 'Something went wrong. Please try again.',
+    },
   },
   /** Copy for the rich-text workbook editor and its toolbar. */
   editor: {
@@ -127,6 +154,7 @@ export const labels = {
     saveStatus: 'Save status',
     dropZone: 'Drop images or PDFs to attach them',
     uploadProgress: 'Upload progress',
+    versionList: 'Saved versions',
   },
 } as const;
 

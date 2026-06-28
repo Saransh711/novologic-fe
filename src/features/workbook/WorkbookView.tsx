@@ -1,14 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { AlertCircle } from 'lucide-react';
-import type { JSONContent } from '@tiptap/react';
+import type { Editor, JSONContent } from '@tiptap/react';
 import { labels, routes } from '@/config';
 import { useWorkbookQuery } from '@/lib/graphql';
 import { AppShell, type NavItem } from '@/components/layout';
 import { Button, Skeleton } from '@/components/ui';
 import { SaveStatus } from './SaveStatus';
+import { AiSummaryButton } from './AiSummaryButton';
+import { VersionHistory } from './VersionHistory';
 import { useWorkbookAutosave } from './useWorkbookAutosave';
+import { useSaveShortcut } from './useSaveShortcut';
 
 export interface WorkbookViewProps {
   projectId: string;
@@ -69,9 +73,15 @@ function LoadError({ onRetry }: { onRetry: () => void }) {
 export function WorkbookView({ projectId }: WorkbookViewProps) {
   const { data, loading, error, refetch } = useWorkbookQuery({ variables: { projectId } });
   const autosave = useWorkbookAutosave(projectId);
+  const [editor, setEditor] = useState<Editor | null>(null);
 
   const ready = !loading && !error;
   const content = (data?.workbook?.content ?? null) as JSONContent | null;
+  const workbookId = data?.workbook?.id ?? null;
+
+  // Ctrl/⌘+S flushes the autosave instead of saving the page. Bold (Ctrl/⌘+B)
+  // and italic (Ctrl/⌘+I) are bound natively by the editor's keymap.
+  useSaveShortcut(autosave.saveNow, ready);
 
   return (
     <AppShell
@@ -81,11 +91,20 @@ export function WorkbookView({ projectId }: WorkbookViewProps) {
       }
     >
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-        <header className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold tracking-tight text-balance text-foreground">
-            {labels.workbook.title}
-          </h1>
-          <p className="text-sm text-pretty text-muted">{labels.workbook.subtitle}</p>
+        <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-bold tracking-tight text-balance text-foreground">
+              {labels.workbook.title}
+            </h1>
+            <p className="text-sm text-pretty text-muted">{labels.workbook.subtitle}</p>
+          </div>
+
+          {ready ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <AiSummaryButton editor={editor} />
+              <VersionHistory workbookId={workbookId} />
+            </div>
+          ) : null}
         </header>
 
         {loading ? (
@@ -93,7 +112,12 @@ export function WorkbookView({ projectId }: WorkbookViewProps) {
         ) : error ? (
           <LoadError onRetry={() => void refetch().catch(() => {})} />
         ) : (
-          <WorkbookEditor content={content} projectId={projectId} onChange={autosave.onChange} />
+          <WorkbookEditor
+            content={content}
+            projectId={projectId}
+            onChange={autosave.onChange}
+            onEditorReady={setEditor}
+          />
         )}
       </div>
     </AppShell>

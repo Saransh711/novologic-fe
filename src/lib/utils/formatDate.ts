@@ -8,3 +8,14 @@ export function formatDate(iso: string): string {
   if (Number.isNaN(date.getTime())) return '';
   return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(date);
 }
+
+/**
+ * Formats an ISO-8601 timestamp into a readable date *and* time, used where the
+ * exact moment matters (e.g. version-history snapshots taken minutes apart).
+ * Returns an empty string for invalid input.
+ */
+export function formatDateTime(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(date);
+}

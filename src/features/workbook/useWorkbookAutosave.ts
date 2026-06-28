@@ -14,6 +14,12 @@ export interface UseWorkbookAutosaveResult {
   onChange: (doc: JSONContent) => void;
   /** Force an immediate save of the latest document (wired to error retry). */
   retry: () => void;
+  /**
+   * Immediately persist the latest document, flushing any pending debounce.
+   * Unlike {@link retry}, it saves even when nothing is dirty so an explicit
+   * save gesture (e.g. Ctrl+S) always gives feedback. No-op before the first edit.
+   */
+  saveNow: () => void;
 }
 
 /**
@@ -39,10 +45,10 @@ export function useWorkbookAutosave(projectId: string): UseWorkbookAutosaveResul
     maxWaitRef.current = null;
   }, []);
 
-  const save = useCallback(async () => {
+  const save = useCallback(async (force = false) => {
     clearTimers();
     const doc = latestDocRef.current;
-    if (!doc || !dirtyRef.current) return;
+    if (!doc || (!dirtyRef.current && !force)) return;
 
     dirtyRef.current = false;
     setStatus('saving');
@@ -75,6 +81,8 @@ export function useWorkbookAutosave(projectId: string): UseWorkbookAutosaveResul
 
   const retry = useCallback(() => void save(), [save]);
 
+  const saveNow = useCallback(() => void save(true), [save]);
+
   useEffect(() => {
     return () => {
       clearTimers();
@@ -88,5 +96,5 @@ export function useWorkbookAutosave(projectId: string): UseWorkbookAutosaveResul
     };
   }, [clearTimers, projectId, saveWorkbook]);
 
-  return { status, onChange, retry };
+  return { status, onChange, retry, saveNow };
 }

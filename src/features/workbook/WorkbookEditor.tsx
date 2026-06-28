@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
-import { EditorContent, type JSONContent } from '@tiptap/react';
+import { EditorContent, type Editor, type JSONContent } from '@tiptap/react';
 import { AnimatePresence } from 'motion/react';
 import { labels } from '@/config';
 import { Skeleton } from '@/components/ui';
@@ -22,6 +22,12 @@ export interface WorkbookEditorProps {
   projectId?: string;
   /** Receives the full document JSON on every change. */
   onChange?: (doc: JSONContent) => void;
+  /**
+   * Surfaces the editor instance (and `null` on teardown) so the parent can
+   * drive it imperatively — e.g. appending an AI summary. Kept out of SSR by
+   * living in this client-only, dynamically imported module.
+   */
+  onEditorReady?: (editor: Editor | null) => void;
   className?: string;
 }
 
@@ -36,6 +42,7 @@ export function WorkbookEditor({
   editable = true,
   projectId,
   onChange,
+  onEditorReady,
   className,
 }: WorkbookEditorProps) {
   // The drop handler needs the editor, but the editor needs a drop handler at
@@ -51,6 +58,11 @@ export function WorkbookEditor({
   useEffect(() => {
     dropFilesRef.current = uploads.uploadFilesAt;
   }, [uploads.uploadFilesAt]);
+
+  useEffect(() => {
+    onEditorReady?.(editor);
+    return () => onEditorReady?.(null);
+  }, [editor, onEditorReady]);
 
   const { isDragging, dropZoneProps } = useFileDropZone(editable, uploads.uploadFilesAt);
 
