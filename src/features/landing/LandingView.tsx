@@ -5,6 +5,7 @@ import { FileUp, History, NotebookPen, Save } from 'lucide-react';
 import { app, editor, labels, upload } from '@/config';
 import { fadeInUp, staggerContainer } from '@/design/motion';
 import { Button, Card, CardDescription, CardHeader, CardTitle, ThemeToggle } from '@/components/ui';
+import { UserInfoPanel } from '@/features/user';
 
 const features = [
   {
@@ -34,6 +35,8 @@ export function LandingView() {
         </span>
         <ThemeToggle />
       </header>
+
+      <UserInfoPanel className="mt-6" />
 
       <motion.main
         variants={staggerContainer}

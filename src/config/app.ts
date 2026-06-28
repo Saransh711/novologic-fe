@@ -23,6 +23,17 @@ export const labels = {
     projects: 'Projects',
     workbook: 'Workbook',
   },
+  user: {
+    panelTitle: 'Your information',
+    fields: {
+      name: 'Name',
+      email: 'Email',
+      address: 'Address',
+      phone: 'Phone',
+    },
+    errorTitle: 'Couldn’t load your information',
+    empty: 'No user information available yet.',
+  },
   states: {
     loading: 'Loading…',
     saving: 'Saving…',
