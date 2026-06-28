@@ -25,7 +25,7 @@ export function UploadProgress({ uploads }: UploadProgressProps) {
       role="status"
       aria-live="polite"
       aria-label={labels.a11y.uploadProgress}
-      className="pointer-events-none absolute bottom-3 right-3 z-20 flex w-full max-w-xs flex-col gap-2"
+      className="pointer-events-none absolute inset-x-3 bottom-3 z-docked ml-auto flex max-w-xs flex-col gap-2"
     >
       <AnimatePresence initial={false}>
         {uploads.map((item) => {

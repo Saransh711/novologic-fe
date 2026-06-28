@@ -35,8 +35,13 @@ function assetNode(asset: UploadedFile, kind: UploadKind): JSONContent {
   return { type: PDF_EMBED_NAME, attrs: { src: asset.url, title: asset.name } };
 }
 
-/** Inserts a node at `pos`, or at the current selection when `pos` is null. */
+/**
+ * Inserts a node at `pos`, or at the current selection when `pos` is null.
+ * No-ops if the editor was torn down while the upload was in flight (e.g. the
+ * user navigated away) so a settled upload never calls into a dead instance.
+ */
 function insertAsset(editor: Editor, node: JSONContent, pos: number | null) {
+  if (editor.isDestroyed) return;
   const chain = editor.chain().focus();
   (pos == null ? chain.insertContent(node) : chain.insertContentAt(pos, node)).run();
 }

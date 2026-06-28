@@ -91,7 +91,7 @@ export function WorkbookView({ projectId }: WorkbookViewProps) {
         {loading ? (
           <EditorSkeleton />
         ) : error ? (
-          <LoadError onRetry={() => void refetch()} />
+          <LoadError onRetry={() => void refetch().catch(() => {})} />
         ) : (
           <WorkbookEditor content={content} projectId={projectId} onChange={autosave.onChange} />
         )}

@@ -15,7 +15,7 @@ export function DropOverlay() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded-lg border-2 border-dashed border-primary bg-bg/80 backdrop-blur-sm"
+      className="pointer-events-none absolute inset-0 z-docked flex items-center justify-center rounded-lg border-2 border-dashed border-primary bg-bg/80 backdrop-blur-sm"
       initial={reduceMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={reduceMotion ? undefined : { opacity: 0 }}

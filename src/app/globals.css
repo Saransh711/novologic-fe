@@ -251,6 +251,14 @@
       background-color var(--duration-fast) var(--ease-standard);
   }
 
+  /* Comfortable 44px tap target on touch devices, compact on pointer devices. */
+  @media (pointer: coarse) {
+    .workbook-pdf__open {
+      width: var(--space-11);
+      height: var(--space-11);
+    }
+  }
+
   .workbook-pdf__open:hover {
     color: var(--color-foreground);
     background-color: var(--color-bg);
