@@ -93,11 +93,6 @@ function ProjectsEmpty() {
   );
 }
 
-/**
- * Lists the user's projects, each linking to its workbook. Handles loading
- * (skeletons), error (retry), and empty states explicitly; the list animates in
- * with a staggered fade that is skipped under `prefers-reduced-motion`.
- */
 export function ProjectsView() {
   const { data, loading, error, refetch } = useProjectsQuery();
   const reduceMotion = useReducedMotion();

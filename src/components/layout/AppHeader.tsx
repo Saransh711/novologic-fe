@@ -25,7 +25,6 @@ export interface NavItem {
 
 export interface AppHeaderProps {
   navItems?: NavItem[];
-  /** Actions rendered on the trailing edge, before the theme toggle. */
   actions?: ReactNode;
 }
 
@@ -72,11 +71,6 @@ function NavLink({
   );
 }
 
-/**
- * Sticky, responsive top bar. The primary navigation shows inline from the
- * `md` breakpoint up; below that it collapses into a slide-in sheet behind a
- * menu button, keeping comfortable touch targets on small screens.
- */
 export function AppHeader({ navItems = [], actions }: AppHeaderProps) {
   const pathname = usePathname();
   const hasNav = navItems.length > 0;

@@ -34,11 +34,6 @@ function EditorSkeleton() {
   );
 }
 
-/**
- * The Tiptap editor relies on browser APIs and a default React import that
- * breaks server-side module evaluation, so it is loaded client-side only. The
- * skeleton stands in until the editor chunk has hydrated.
- */
 const WorkbookEditor = dynamic(() => import('./WorkbookEditor').then((mod) => mod.WorkbookEditor), {
   ssr: false,
   loading: () => <EditorSkeleton />,
@@ -64,12 +59,6 @@ function LoadError({ onRetry }: { onRetry: () => void }) {
   );
 }
 
-/**
- * The workbook page surface: loads the project's document, renders the editor,
- * and autosaves edits. Every async state — loading, error, and the empty
- * "no workbook yet" case — is handled explicitly. The autosave indicator lives
- * in the header once the editor is interactive.
- */
 export function WorkbookView({ projectId }: WorkbookViewProps) {
   const { data, loading, error, refetch } = useWorkbookQuery({ variables: { projectId } });
   const autosave = useWorkbookAutosave(projectId);
@@ -79,8 +68,6 @@ export function WorkbookView({ projectId }: WorkbookViewProps) {
   const content = (data?.workbook?.content ?? null) as JSONContent | null;
   const workbookId = data?.workbook?.id ?? null;
 
-  // Ctrl/⌘+S flushes the autosave instead of saving the page. Bold (Ctrl/⌘+B)
-  // and italic (Ctrl/⌘+I) are bound natively by the editor's keymap.
   useSaveShortcut(autosave.saveNow, ready);
 
   return (

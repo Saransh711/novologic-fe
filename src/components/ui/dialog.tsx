@@ -7,11 +7,6 @@ import { labels } from '@/config';
 import { cn } from '@/lib/utils/cn';
 import { IconButton } from './icon-button';
 
-/**
- * Modal dialog and edge sheet, both built on Radix Dialog — so they share focus
- * trapping, scroll locking, `Esc`-to-close, and correct `aria` wiring. A
- * `Dialog`/`Sheet` must contain a `DialogTitle`/`SheetTitle` for screen readers.
- */
 export const Dialog = RadixDialog.Root;
 export const DialogTrigger = RadixDialog.Trigger;
 export const DialogClose = RadixDialog.Close;
@@ -42,11 +37,9 @@ function CloseButton() {
 }
 
 export interface DialogContentProps extends ComponentPropsWithoutRef<typeof RadixDialog.Content> {
-  /** Render the built-in top-right close button. Defaults to `true`. */
   showClose?: boolean;
 }
 
-/** Centered modal surface. */
 export function DialogContent({ className, children, showClose = true, ...props }: DialogContentProps) {
   return (
     <RadixDialog.Portal>
@@ -79,7 +72,6 @@ const sheetSide: Record<SheetSide, string> = {
   left: 'anim-sheet-left inset-y-0 left-0 border-r',
 };
 
-/** Edge-anchored panel that slides in from the left or right. */
 export function SheetContent({
   side = 'right',
   className,

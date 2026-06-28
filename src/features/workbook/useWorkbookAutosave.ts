@@ -5,30 +5,15 @@ import type { JSONContent } from '@tiptap/react';
 import { editor as editorConfig } from '@/config';
 import { useSaveWorkbookMutation } from '@/lib/graphql';
 
-/** Lifecycle of the current document relative to the server. */
 export type SaveStatus = 'saved' | 'saving' | 'error';
 
 export interface UseWorkbookAutosaveResult {
   status: SaveStatus;
-  /** Feed every editor change here; saves are debounced automatically. */
   onChange: (doc: JSONContent) => void;
-  /** Force an immediate save of the latest document (wired to error retry). */
   retry: () => void;
-  /**
-   * Immediately persist the latest document, flushing any pending debounce.
-   * Unlike {@link retry}, it saves even when nothing is dirty so an explicit
-   * save gesture (e.g. Ctrl+S) always gives feedback. No-op before the first edit.
-   */
   saveNow: () => void;
 }
 
-/**
- * Debounced autosave for a project's workbook. A save fires once typing has
- * been idle for `autosaveDebounceMs`, and a `autosaveMaxWaitMs` ceiling
- * guarantees a save even during continuous typing. The latest document is kept
- * in a ref so the in-flight request always persists the freshest content, and a
- * best-effort flush on unmount avoids losing edits when navigating away.
- */
 export function useWorkbookAutosave(projectId: string): UseWorkbookAutosaveResult {
   const [saveWorkbook] = useSaveWorkbookMutation();
   const [status, setStatus] = useState<SaveStatus>('saved');
@@ -56,7 +41,6 @@ export function useWorkbookAutosave(projectId: string): UseWorkbookAutosaveResul
       await saveWorkbook({
         variables: { input: { projectId, content: doc as Record<string, unknown> } },
       });
-      // A newer edit may have arrived mid-flight; keep showing "saving" if so.
       setStatus(dirtyRef.current ? 'saving' : 'saved');
     } catch {
       dirtyRef.current = true;

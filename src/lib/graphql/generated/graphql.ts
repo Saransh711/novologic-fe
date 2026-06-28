@@ -1,37 +1,24 @@
-/** Internal type. DO NOT USE DIRECTLY. */
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-/** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-/** Health of an individual downstream dependency. */
 export type DependencyStatus =
   | 'Down'
   | 'Up';
 
-/** Input to create or overwrite a project workbook. */
 export type SaveWorkbookInput = {
-  /** ProseMirror/Tiptap document to persist as the workbook content. */
   content: Record<string, unknown>;
-  /** Identifier of the project that owns the workbook. */
   projectId: string;
 };
 
-/** Overall health of the service. */
 export type ServiceStatus =
   | 'Degraded'
   | 'Ok';
 
-/** Metadata describing an already-uploaded file binary. */
 export type UploadFileMetadataInput = {
-  /** IANA media type of the file (allowlist enforced server-side). */
   mimeType: string;
-  /** Human-readable display name of the file. */
   name: string;
-  /** Identifier of the project the file belongs to. */
   projectId: string;
-  /** Size of the file in bytes. */
   size: number;
-  /** Server-generated storage key locating the binary. */
   storageKey: string;
 };
 

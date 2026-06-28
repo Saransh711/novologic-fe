@@ -5,10 +5,6 @@ import { motion, useReducedMotion } from 'motion/react';
 import { labels, upload } from '@/config';
 import { transitions } from '@/design/motion';
 
-/**
- * Full-cover hint shown while files are dragged over the editor. Pointer events
- * are disabled so the drop still reaches the editable surface beneath it.
- */
 export function DropOverlay() {
   const reduceMotion = useReducedMotion();
 

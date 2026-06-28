@@ -1,8 +1,4 @@
-/**
- * Framer Motion presets derived from the motion tokens, so animations share the
- * same durations and easings as CSS transitions. Components import these instead
- * of writing inline timing values.
- */
+
 import type { Transition, Variants } from 'motion/react';
 import { tokens } from './tokens';
 

@@ -9,14 +9,7 @@ import type { ThemeName } from '@/design/tokens';
 import { applyTheme, getActiveTheme, getThemeServerSnapshot, subscribeTheme } from '@/lib/theme';
 import { Button } from './button';
 
-/**
- * Toggles between light and dark themes. The active theme is read from an
- * external store, so it stays in sync with toggles, other tabs, and OS
- * preference changes. The icons cross-fade and counter-rotate on switch — a
- * sun rises as the moon sets — using the shared motion tokens; the swap is
- * instantaneous under `prefers-reduced-motion`. Before hydration the theme is
- * unknown, so a neutral placeholder holds the layout.
- */
+
 export function ThemeToggle() {
   const theme = useSyncExternalStore(subscribeTheme, getActiveTheme, getThemeServerSnapshot);
   const reduceMotion = useReducedMotion();

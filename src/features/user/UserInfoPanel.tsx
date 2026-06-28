@@ -64,11 +64,6 @@ export interface UserInfoPanelProps {
   className?: string;
 }
 
-/**
- * Account summary shown at the top of the page. Composes the shared primitives
- * and handles every async surface — loading (skeleton), error (with retry), and
- * empty — explicitly. Data comes from the typed `useUserInfo` hook.
- */
 export function UserInfoPanel({ className }: UserInfoPanelProps) {
   const { data, loading, error, refetch } = useUserInfo();
   const reduceMotion = useReducedMotion();

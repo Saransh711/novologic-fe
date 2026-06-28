@@ -27,7 +27,6 @@ function describeError(error: unknown): string {
   return labels.editor.upload.generic;
 }
 
-/** Builds the ProseMirror node for an uploaded asset. */
 function assetNode(asset: UploadedFile, kind: UploadKind): JSONContent {
   if (kind === 'image') {
     return { type: 'image', attrs: { src: asset.url, alt: asset.name } };
@@ -35,25 +34,12 @@ function assetNode(asset: UploadedFile, kind: UploadKind): JSONContent {
   return { type: PDF_EMBED_NAME, attrs: { src: asset.url, title: asset.name } };
 }
 
-/**
- * Inserts a node at `pos`, or at the current selection when `pos` is null.
- * No-ops if the editor was torn down while the upload was in flight (e.g. the
- * user navigated away) so a settled upload never calls into a dead instance.
- */
 function insertAsset(editor: Editor, node: JSONContent, pos: number | null) {
   if (editor.isDestroyed) return;
   const chain = editor.chain().focus();
   (pos == null ? chain.insertContent(node) : chain.insertContentAt(pos, node)).run();
 }
 
-/**
- * Wires file attachments to the API flow: the binary goes over REST
- * (`/files/upload`) with progress reporting; when a `projectId` is supplied the
- * returned `storageKey` is recorded via `uploadFileMetadata`; finally the asset
- * is inserted into the document — an image node for pictures, an embedded PDF
- * preview node for documents. Invalid files are rejected up front with a toast,
- * and in-flight uploads are tracked in `active` for a progress UI.
- */
 export function useWorkbookUploads(
   editor: Editor | null,
   projectId?: string,

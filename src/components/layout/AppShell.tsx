@@ -8,19 +8,12 @@ import { Container } from './Container';
 export interface AppShellProps {
   children: ReactNode;
   navItems?: NavItem[];
-  /** Header actions rendered before the theme toggle. */
   headerActions?: ReactNode;
-  /** Replace the default footer; pass `null` to omit it. */
   footer?: ReactNode;
 }
 
 const MAIN_ID = 'main-content';
 
-/**
- * The application frame: a skip link, the sticky header, a centred main region,
- * and a footer. Pages render their content as children inside the shared
- * `Container` gutters. Uses `min-h-dvh` so short pages still fill the viewport.
- */
 export function AppShell({ children, navItems, headerActions, footer }: AppShellProps) {
   return (
     <div className="flex min-h-dvh flex-col">

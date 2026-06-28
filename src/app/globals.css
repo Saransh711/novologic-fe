@@ -1,9 +1,6 @@
 @config '../../tailwind.config.ts';
 @import 'tailwindcss';
 
-/* Dark mode is opt-in via `data-theme='dark'` on the document element. The token
-   variables flip values under that selector, so semantic utilities adapt
-   automatically; the `dark:` variant is available for the rare explicit case. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 @layer base {
@@ -39,9 +36,6 @@
     outline-offset: 2px;
   }
 
-  /* Honour the user's OS-level reduced-motion preference everywhere: collapse
-     every transition and animation (including the token-driven keyframes below,
-     skeleton pulse, and spinner) to a single instantaneous frame. */
   @media (prefers-reduced-motion: reduce) {
     *,
     ::before,
@@ -54,10 +48,6 @@
   }
 }
 
-/* Overlay-driven primitives (Dialog, Sheet, Tooltip, Toast) animate via their
-   Radix `data-state` / `data-swipe` attributes. Timing and easing are pulled
-   from the design-token CSS variables so motion stays in lock-step with the
-   rest of the system; the reduced-motion rule above neutralises them. */
 @layer components {
   .anim-overlay[data-state='open'] {
     animation: fade-in var(--duration-base) var(--ease-standard);
@@ -121,9 +111,6 @@
   }
 }
 
-/* Workbook editor content. Tailwind's preflight strips list and heading styling,
-   so the rich-text surface restores it here — every value resolves to a design
-   token variable so the prose matches the rest of the system and themes. */
 @layer components {
   .workbook-prose__surface {
     min-height: var(--space-64);
@@ -197,7 +184,6 @@
     outline-offset: 2px;
   }
 
-  /* Embedded-PDF node (rendered via a React node view). */
   .workbook-pdf {
     overflow: hidden;
     border: 1px solid var(--color-border);
@@ -251,7 +237,6 @@
       background-color var(--duration-fast) var(--ease-standard);
   }
 
-  /* Comfortable 44px tap target on touch devices, compact on pointer devices. */
   @media (pointer: coarse) {
     .workbook-pdf__open {
       width: var(--space-11);
@@ -277,7 +262,6 @@
     background-color: var(--color-bg);
   }
 
-  /* Placeholder shown by @tiptap/extensions on the empty first block. */
   .workbook-prose__surface p.is-editor-empty:first-child::before {
     content: attr(data-placeholder);
     color: var(--color-muted);

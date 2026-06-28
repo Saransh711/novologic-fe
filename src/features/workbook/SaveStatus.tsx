@@ -12,12 +12,6 @@ export interface SaveStatusProps {
   className?: string;
 }
 
-/**
- * Compact autosave indicator for the app header. The whole control is a polite
- * live region so screen readers hear "Saving…" / "All changes saved" without
- * the label stealing focus; the text label is hidden on the narrowest screens
- * to keep the header uncluttered.
- */
 export function SaveStatus({ status, onRetry, className }: SaveStatusProps) {
   return (
     <div

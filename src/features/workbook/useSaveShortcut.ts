@@ -2,13 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 
-/**
- * Intercepts the platform save chord (Ctrl+S / ⌘S) anywhere on the page and runs
- * `onSave` instead of opening the browser's "Save page" dialog. Bold (Ctrl/⌘+B)
- * and italic (Ctrl/⌘+I) are handled natively by the editor's keymap, so only the
- * save gesture needs wiring here. The callback is read through a ref so a
- * changing identity never re-binds the listener.
- */
 export function useSaveShortcut(onSave: () => void, enabled = true): void {
   const onSaveRef = useRef(onSave);
 

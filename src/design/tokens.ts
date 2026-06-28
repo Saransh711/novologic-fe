@@ -1,47 +1,22 @@
-/**
- * Design tokens — the single source of truth for every visual value in the app.
- *
- * Nothing in components, features, or config may hard-code a colour, size,
- * radius, shadow, z-index, breakpoint, or motion value. They are all defined
- * here, exposed to the runtime as CSS custom properties (see `css-variables.ts`)
- * and to Tailwind via `tailwind.config.ts`. Change the look of the product by
- * editing this file only.
- */
 
-/** Semantic colour roles. Light and dark themes must declare the same keys. */
 export interface ColorScheme {
-  /** Page backdrop behind all surfaces. */
   bg: string;
-  /** Default raised surface (cards, panels, inputs). */
   surface: string;
-  /** Subtle surface for nested or secondary regions. */
   surfaceMuted: string;
-  /** Primary text colour on `bg`/`surface`. */
   foreground: string;
-  /** De-emphasised text (captions, placeholders, metadata). */
   muted: string;
-  /** Hairline borders and dividers. */
   border: string;
-  /** Focus ring / active outline colour. */
   ring: string;
-  /** Brand colour for primary actions. */
   primary: string;
-  /** Text/icon colour rendered on top of `primary`. */
   primaryForeground: string;
-  /** Secondary brand colour for emphasis and highlights. */
   accent: string;
-  /** Text/icon colour rendered on top of `accent`. */
   accentForeground: string;
-  /** Positive / confirmation state. */
   success: string;
   successForeground: string;
-  /** Caution state. */
   warning: string;
   warningForeground: string;
-  /** Destructive / error state. */
   danger: string;
   dangerForeground: string;
-  /** Scrim behind modals and drawers. */
   overlay: string;
 }
 
@@ -94,7 +69,6 @@ export const colorThemes = {
 
 export type ThemeName = keyof typeof colorThemes;
 
-/** Font family stacks. Self-contained so tokens never depend on runtime fonts. */
 const fontFamily = {
   sans: [
     'ui-sans-serif',
@@ -109,7 +83,6 @@ const fontFamily = {
   mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
 } as const;
 
-/** Type scale in `rem`. */
 const fontSize = {
   xs: '0.75rem',
   sm: '0.875rem',
@@ -154,7 +127,6 @@ const typography = {
   letterSpacing,
 } as const;
 
-/** Spacing scale (rem-based) used for padding, margin, gap, and sizing. */
 const spacing = {
   '0': '0px',
   px: '1px',
@@ -199,11 +171,6 @@ const radii = {
   full: '9999px',
 } as const;
 
-/**
- * Elevation scale. Each level layers a tight contact shadow over a softer
- * ambient one so depth reads naturally rather than as a single flat blur — the
- * higher the level, the further the surface lifts off the page.
- */
 const shadows = {
   none: 'none',
   sm: '0 1px 1px -0.5px rgb(15 23 42 / 0.05), 0 1px 3px -1px rgb(15 23 42 / 0.07)',
@@ -212,7 +179,6 @@ const shadows = {
   xl: '0 8px 16px -8px rgb(15 23 42 / 0.10), 0 32px 56px -16px rgb(15 23 42 / 0.22)',
 } as const;
 
-/** Stacking order layers. Higher value sits on top. */
 const zIndex = {
   base: 0,
   docked: 10,
@@ -225,7 +191,6 @@ const zIndex = {
   tooltip: 1700,
 } as const;
 
-/** Responsive breakpoints (min-width). Consumed by Tailwind `screens`. */
 const breakpoints = {
   sm: '640px',
   md: '768px',
@@ -234,12 +199,6 @@ const breakpoints = {
   '2xl': '1536px',
 } as const;
 
-/**
- * Motion primitives.
- * - `duration` values are milliseconds (CSS gets `ms`; Framer Motion gets seconds).
- * - `easing` values are cubic-bezier control points (CSS gets `cubic-bezier(...)`;
- *   Framer Motion accepts the array directly).
- */
 const motion = {
   duration: {
     instant: 0,

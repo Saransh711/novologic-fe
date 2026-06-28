@@ -13,15 +13,9 @@ const sizeClasses: Record<SpinnerSize, string> = {
 export interface SpinnerProps {
   size?: SpinnerSize;
   className?: string;
-  /** Accessible label announced to assistive tech. Defaults to "Loading…". */
   label?: string;
 }
 
-/**
- * Indeterminate loading indicator. Inherits `currentColor`, so it adopts the
- * colour of whatever context it sits in. The spin is suppressed automatically
- * under `prefers-reduced-motion` via the global reduced-motion rule.
- */
 export function Spinner({ size = 'md', className, label = labels.states.loading }: SpinnerProps) {
   return (
     <span role="status" aria-live="polite" className={cn('inline-flex text-current', className)}>

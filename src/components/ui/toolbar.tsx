@@ -6,12 +6,6 @@ import { labels } from '@/config';
 import { cn } from '@/lib/utils/cn';
 import { focusRing, interactiveVariant } from './styles';
 
-/**
- * A horizontal command bar with proper `role="toolbar"` semantics and
- * roving-tabindex keyboard navigation (arrow keys move between controls; the
- * group is a single tab stop). On narrow screens it scrolls horizontally rather
- * than wrapping; collapsing actions into an overflow menu is the caller's job.
- */
 export const Toolbar = forwardRef<
   HTMLDivElement,
   ComponentPropsWithoutRef<typeof RadixToolbar.Root>
@@ -29,7 +23,6 @@ export const Toolbar = forwardRef<
   );
 });
 
-/** Pressable action inside a {@link Toolbar}. Larger touch target on mobile. */
 export const ToolbarButton = forwardRef<
   HTMLButtonElement,
   ComponentPropsWithoutRef<typeof RadixToolbar.Button>
@@ -64,7 +57,6 @@ export function ToolbarSeparator({
 
 export const ToolbarToggleGroup = RadixToolbar.ToggleGroup;
 
-/** Toggleable control (e.g. bold/italic) with an on/off visual state. */
 export const ToolbarToggleItem = forwardRef<
   HTMLButtonElement,
   ComponentPropsWithoutRef<typeof RadixToolbar.ToggleItem>

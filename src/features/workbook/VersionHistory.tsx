@@ -22,19 +22,11 @@ import {
 import { formatDateTime } from '@/lib/utils/formatDate';
 
 export interface VersionHistoryProps {
-  /** The workbook whose history to show; `null` before a workbook exists. */
   workbookId: string | null;
 }
 
 const SKELETON_COUNT = 3;
 
-/**
- * Slide-out panel listing the workbook's most recent snapshots (the API caps
- * the list at 5, newest first) with one-tap restore. Restoring archives the
- * current content first, so it is always reversible; the editor updates from the
- * Apollo cache once the mutation resolves. Loading, error, and empty states are
- * all handled explicitly.
- */
 export function VersionHistory({ workbookId }: VersionHistoryProps) {
   const [open, setOpen] = useState(false);
 

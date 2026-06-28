@@ -22,7 +22,6 @@ export interface ToastOptions {
   title: string;
   description?: ReactNode;
   variant?: ToastVariant;
-  /** Override the default auto-dismiss delay (ms). */
   durationMs?: number;
 }
 
@@ -32,7 +31,6 @@ interface ToastRecord extends ToastOptions {
 }
 
 interface ToastContextValue {
-  /** Enqueue a toast; returns its id so it can be dismissed programmatically. */
   toast: (options: ToastOptions) => number;
   dismiss: (id: number) => void;
 }
@@ -46,10 +44,6 @@ const variantConfig: Record<ToastVariant, { icon: typeof Info; accent: string; t
   danger: { icon: TriangleAlert, accent: 'border-l-danger', tone: 'text-danger' },
 };
 
-/**
- * Hosts the toast queue and the Radix viewport. Mount once near the root.
- * Children rendered inside can raise toasts through {@link useToast}.
- */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastRecord[]>([]);
   const nextId = useRef(0);
@@ -62,7 +56,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (id: number, open: boolean) => {
       setToasts((current) => current.map((item) => (item.id === id ? { ...item, open } : item)));
       if (!open) {
-        // Let the close animation finish before unmounting the node.
         window.setTimeout(() => remove(id), tokens.motion.duration.slow);
       }
     },
@@ -129,7 +122,6 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/** Access the imperative toast API. Must be called under a {@link ToastProvider}. */
 export function useToast(): ToastContextValue {
   const context = useContext(ToastContext);
   if (!context) {

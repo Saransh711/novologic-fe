@@ -2,17 +2,10 @@ import { Node, mergeAttributes } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { PdfEmbedView } from './PdfEmbedView';
 
-/** Schema name of the embedded-PDF node; shared with insertion call sites. */
 export const PDF_EMBED_NAME = 'pdfEmbed' as const;
 
 const DATA_ATTR = 'data-pdf-embed';
 
-/**
- * A block-level, atomic node representing an uploaded PDF. It stores only the
- * served `src` URL and a display `title`; the binary lives behind the API's
- * static file route. Editing renders through {@link PdfEmbedView} (an iframe
- * preview); `renderHTML`/`parseHTML` keep copy-paste and HTML export lossless.
- */
 export const PdfEmbed = Node.create({
   name: PDF_EMBED_NAME,
   group: 'block',

@@ -12,10 +12,6 @@ const sizeClasses: Record<IconButtonSize, string> = {
   lg: 'h-12 w-12 rounded-lg [&_svg]:h-6 [&_svg]:w-6',
 };
 
-/**
- * A square, icon-only button. `aria-label` is required by the type system
- * because an icon alone conveys nothing to assistive tech.
- */
 export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   variant?: IconButtonVariant;
   size?: IconButtonSize;

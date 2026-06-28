@@ -5,12 +5,6 @@ import { NodeViewWrapper, type ReactNodeViewProps } from '@tiptap/react';
 import { labels } from '@/config';
 import { cn } from '@/lib/utils/cn';
 
-/**
- * Renders the `pdfEmbed` node: a framed, inline PDF preview with a header
- * showing the filename and a link to open the document in a new tab. The node
- * is an atom, so the whole card is non-editable; `data-drag-handle` lets the
- * user reposition it like any other block.
- */
 export function PdfEmbedView({ node, selected }: ReactNodeViewProps) {
   const src = typeof node.attrs.src === 'string' ? node.attrs.src : '';
   const title =

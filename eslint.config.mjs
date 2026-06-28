@@ -6,16 +6,12 @@ import prettier from 'eslint-config-prettier';
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  // Disable stylistic rules that conflict with Prettier (must come last).
   prettier,
-  // Override default ignores of eslint-config-next.
   globalIgnores([
-    // Default ignores of eslint-config-next:
     '.next/**',
     'out/**',
     'build/**',
     'next-env.d.ts',
-    // Machine-generated GraphQL types/documents (`npm run codegen`).
     'src/lib/graphql/generated/**',
   ]),
 ]);

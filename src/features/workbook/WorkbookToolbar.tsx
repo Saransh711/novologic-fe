@@ -52,12 +52,6 @@ export interface WorkbookToolbarProps {
   uploads: WorkbookUploadHandlers;
 }
 
-/**
- * The workbook command bar. Text marks, the heading menu, and undo/redo stay
- * inline at every width; lists and uploads collapse into an overflow menu below
- * the `md` breakpoint so the bar never overflows on phones. State is read
- * reactively through `useEditorState`, so active styling tracks the selection.
- */
 export function WorkbookToolbar({ editor, uploads }: WorkbookToolbarProps) {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
@@ -221,7 +215,6 @@ interface ToggleActionProps {
   onToggle: () => void;
 }
 
-/** A roving-tabindex toggle inside a {@link ToolbarToggleGroup}. */
 function ToggleAction({ value, label, icon: Icon, pressed, onToggle }: ToggleActionProps) {
   return (
     <Tooltip content={label}>
@@ -246,7 +239,6 @@ interface ActionButtonProps {
   onTrigger: () => void;
 }
 
-/** A momentary command button (undo/redo, uploads). */
 function ActionButton({ label, icon: Icon, disabled, onTrigger }: ActionButtonProps) {
   return (
     <Tooltip content={label}>
@@ -267,7 +259,6 @@ interface HeadingMenuProps {
   activeLevel: HeadingLevel | null;
 }
 
-/** A dropdown that switches the current block between paragraph and headings. */
 function HeadingMenu({ editor, activeLevel }: HeadingMenuProps) {
   const currentLabel = activeLevel
     ? labels.editor.blockTypes.heading(activeLevel)
@@ -319,7 +310,6 @@ interface OverflowMenuProps {
   onUploadPdf: () => void;
 }
 
-/** Collapsed lists + insert actions, shown below the `md` breakpoint. */
 function OverflowMenu({ editor, listState, onUploadImage, onUploadPdf }: OverflowMenuProps) {
   return (
     <Menu>

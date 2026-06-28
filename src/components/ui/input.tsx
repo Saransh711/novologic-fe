@@ -12,7 +12,7 @@ const sizeClasses: Record<InputSize, string> = {
 
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   inputSize?: InputSize;
-  /** Marks the field invalid: wires `aria-invalid` and a danger treatment. */
+ 
   invalid?: boolean;
 }
 

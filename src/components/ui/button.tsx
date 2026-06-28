@@ -21,13 +21,9 @@ const spinnerSize: Record<ButtonSize, 'sm' | 'md'> = {
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  /** Stretch to fill the available inline space. */
   fullWidth?: boolean;
-  /** Show a spinner and block interaction while an async action runs. */
   isLoading?: boolean;
-  /** Icon rendered before the label. */
   leadingIcon?: ReactNode;
-  /** Icon rendered after the label. */
   trailingIcon?: ReactNode;
 }
 

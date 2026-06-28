@@ -12,11 +12,6 @@ export interface UploadProgressProps {
 
 const FRACTION_TO_PERCENT = 100;
 
-/**
- * Floating list of in-flight uploads with a determinate progress bar each.
- * Anchored to the editor's bottom-right; entries animate in and out and are
- * announced politely to assistive tech.
- */
 export function UploadProgress({ uploads }: UploadProgressProps) {
   const reduceMotion = useReducedMotion();
 

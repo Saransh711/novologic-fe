@@ -6,12 +6,6 @@ import { Check } from 'lucide-react';
 import { ui } from '@/config';
 import { cn } from '@/lib/utils/cn';
 
-/**
- * Dropdown menu built on Radix DropdownMenu — focus management, typeahead,
- * arrow-key navigation, and `Esc`/outside-click handling come for free. Styled
- * entirely from tokens. Primary use: collapsing low-priority actions (e.g. a
- * toolbar's overflow) behind a trigger on small screens.
- */
 export const Menu = RadixMenu.Root;
 export const MenuTrigger = RadixMenu.Trigger;
 export const MenuGroup = RadixMenu.Group;
@@ -55,7 +49,6 @@ export function MenuItem({ className, variant = 'default', ...props }: MenuItemP
   return <RadixMenu.Item className={cn(itemBase, itemVariant[variant], className)} {...props} />;
 }
 
-/** Toggleable menu entry (e.g. a formatting option) with a check indicator. */
 export function MenuCheckboxItem({
   className,
   children,

@@ -1,7 +1,4 @@
-/**
- * App-wide identity and user-facing copy. All labels live here so wording can be
- * changed (or later localized) without touching components.
- */
+
 export const app = {
   name: 'Online Workbook',
   shortName: 'Workbook',
@@ -51,12 +48,10 @@ export const labels = {
     errorTitle: 'Couldn’t load your projects',
     openWorkbookFor: (name: string) => `Open the ${name} workbook`,
   },
-  /** Copy for the workbook page surrounding the editor. */
   workbook: {
     title: 'Workbook',
     subtitle: 'Your notes autosave as you type.',
     loadErrorTitle: 'Couldn’t load this workbook',
-    /** AI summary generation surfaced above the editor. */
     aiSummary: {
       generate: 'Generate Summary',
       generating: 'Generating…',
@@ -66,7 +61,6 @@ export const labels = {
       errorTitle: 'Couldn’t generate a summary',
       errorBody: 'Something went wrong. Please try again.',
     },
-    /** Version history panel listing recent snapshots. */
     versions: {
       open: 'Version history',
       title: 'Version history',
@@ -84,9 +78,7 @@ export const labels = {
       restoreErrorBody: 'Something went wrong. Please try again.',
     },
   },
-  /** Copy for the rich-text workbook editor and its toolbar. */
   editor: {
-    /** Visible/labelling text for each formatting control. */
     actions: {
       bold: 'Bold',
       italic: 'Italic',
@@ -100,17 +92,14 @@ export const labels = {
       redo: 'Redo',
       more: 'More formatting',
     },
-    /** Block-type names shown in the heading menu. */
     blockTypes: {
       paragraph: 'Paragraph',
       heading: (level: number) => `Heading ${level}`,
     },
-    /** Section headings inside the overflow menu. */
     groups: {
       lists: 'Lists',
       insert: 'Insert',
     },
-    /** Feedback shown while/after attaching a file. */
     upload: {
       uploading: 'Uploading…',
       uploadingFile: (name: string) => `Uploading ${name}…`,
@@ -120,21 +109,15 @@ export const labels = {
       tooLarge: (limit: string) => `That file is larger than the ${limit} limit.`,
       unsupported: 'That file type isn’t supported.',
       generic: 'We couldn’t attach that file. Please try again.',
-      /** Drag-and-drop overlay copy. */
       dropTitle: 'Drop to attach',
       dropHint: (limit: string) => `Images and PDFs up to ${limit}`,
     },
-    /** Copy for the embedded PDF attachment node. */
     pdf: {
       openInNewTab: 'Open PDF in a new tab',
       previewLabel: (name: string) => `PDF preview: ${name}`,
       untitled: 'PDF document',
     },
   },
-  /**
-   * Accessible names for icon-only controls and assistive-tech landmarks. These
-   * are never shown visually but are essential for screen-reader users.
-   */
   a11y: {
     skipToContent: 'Skip to content',
     primaryNav: 'Primary',

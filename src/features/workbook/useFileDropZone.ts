@@ -2,7 +2,6 @@
 
 import { useCallback, useRef, useState, type DragEvent } from 'react';
 
-/** Drag handlers to spread onto the editor wrapper, plus the dragging flag. */
 export interface FileDropZone {
   isDragging: boolean;
   dropZoneProps: {
@@ -13,18 +12,10 @@ export interface FileDropZone {
   };
 }
 
-/** True when a drag payload carries files (rather than text/HTML). */
 function carriesFiles(event: DragEvent): boolean {
   return Array.from(event.dataTransfer?.types ?? []).includes('Files');
 }
 
-/**
- * Tracks file drag-and-drop over a container so an overlay can be shown. A depth
- * counter avoids the flicker caused by `dragenter`/`dragleave` firing for child
- * elements. The drop itself is handled by ProseMirror's `handleDrop`; this hook
- * only resets state and catches drops that land outside the editable surface
- * (forwarding them to `onFiles` so nothing is silently lost).
- */
 export function useFileDropZone(
   enabled: boolean,
   onFiles: (files: File[], pos: number | null) => void,

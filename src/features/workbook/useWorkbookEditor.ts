@@ -7,33 +7,16 @@ import { createWorkbookExtensions } from './editorExtensions';
 import { EMPTY_DOCUMENT } from './emptyDocument';
 
 export interface UseWorkbookEditorOptions {
-  /** Initial document; `null`/`undefined` starts from an empty doc. */
   content?: JSONContent | null;
-  /** Whether the document is editable (false renders a read-only view). */
   editable?: boolean;
-  /** Called with the full ProseMirror JSON on every change. */
   onChange?: (doc: JSONContent) => void;
-  /**
-   * Called when files are dropped or pasted into the editor. `pos` is the
-   * document position to insert at, or `null` to use the current selection.
-   */
   onDropFiles?: (files: File[], pos: number | null) => void;
 }
 
-/** Files from a drag/clipboard payload, or an empty array when there are none. */
 function filesFrom(list: FileList | null | undefined): File[] {
   return list && list.length > 0 ? Array.from(list) : [];
 }
 
-/**
- * Creates the workbook Tiptap editor. `immediatelyRender: false` is required
- * under the App Router so server and client render the same initial markup.
- *
- * The editor is created once; `onChange` is read through a ref so a changing
- * callback identity never tears down the instance, and externally supplied
- * `content` (e.g. an async workbook load) is synced in without emitting an
- * update or clobbering in-progress edits.
- */
 export function useWorkbookEditor({
   content,
   editable = true,
@@ -90,8 +73,6 @@ export function useWorkbookEditor({
   useEffect(() => {
     if (!editor || content == null) return;
     if (JSON.stringify(editor.getJSON()) === JSON.stringify(content)) return;
-    // `setContent` calls `flushSync` internally; defer it to a microtask so it
-    // doesn't run while React is still rendering this effect.
     queueMicrotask(() => {
       if (editor.isDestroyed) return;
       editor.commands.setContent(content, { emitUpdate: false });
