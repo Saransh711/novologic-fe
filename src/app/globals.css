@@ -113,7 +113,7 @@
 
 @layer components {
   .workbook-prose__surface {
-    min-height: var(--space-64);
+    min-height: 60vh;
     padding: var(--space-4);
     outline: none;
     color: var(--color-foreground);
