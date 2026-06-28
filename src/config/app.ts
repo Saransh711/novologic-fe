@@ -32,6 +32,21 @@ export const labels = {
     emptyProjects: 'No projects yet. Create your first one to get started.',
     emptyWorkbook: 'This workbook is empty. Start typing to add content.',
   },
+  /**
+   * Accessible names for icon-only controls and assistive-tech landmarks. These
+   * are never shown visually but are essential for screen-reader users.
+   */
+  a11y: {
+    skipToContent: 'Skip to content',
+    primaryNav: 'Primary',
+    openMenu: 'Open navigation menu',
+    closeMenu: 'Close navigation menu',
+    closeDialog: 'Close',
+    dismissNotification: 'Dismiss notification',
+    notifications: 'Notifications',
+    home: 'Go to home',
+    toolbar: 'Toolbar',
+  },
 } as const;
 
 export type Labels = typeof labels;

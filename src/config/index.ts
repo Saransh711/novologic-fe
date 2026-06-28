@@ -6,5 +6,7 @@ export { editor } from './editor';
 export { env } from './env';
 export { routes } from './routes';
 export type { Routes } from './routes';
+export { ui } from './ui';
+export type { Ui } from './ui';
 export { upload, uploadAccept } from './upload';
 export type { AllowedMimeType } from './upload';

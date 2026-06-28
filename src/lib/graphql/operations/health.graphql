@@ -1,0 +1,12 @@
+# Liveness/readiness probe with a live database check. Useful for a status badge
+# and for verifying the GraphQL endpoint is reachable.
+
+query Health {
+  health {
+    status
+    service
+    timestamp
+    uptimeSeconds
+    database
+  }
+}

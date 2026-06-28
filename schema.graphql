@@ -1,0 +1,188 @@
+# Workbook API — frozen GraphQL schema (v0.1.0).
+#
+# This SDL is the authoritative integration contract maintained by the backend
+# team and mirrored verbatim from docs/api-contract.md (§1). It is the single
+# source of truth for GraphQL Code Generator; do NOT edit it to add fields the
+# server does not expose. Regenerate types via `npm run codegen` after the
+# backend publishes a new contract.
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Health of an individual downstream dependency."""
+enum DependencyStatus {
+  Down
+  Up
+}
+
+"""A binary asset uploaded to a project."""
+type File {
+  """When the file metadata was recorded."""
+  createdAt: DateTime!
+
+  """Unique file identifier."""
+  id: ID!
+
+  """IANA media type of the file."""
+  mimeType: String!
+
+  """Human-readable display name of the file."""
+  name: String!
+
+  """Identifier of the owning project."""
+  projectId: ID!
+
+  """Size of the file in bytes."""
+  size: Int!
+
+  """Server-generated storage key locating the binary."""
+  storageKey: String!
+}
+
+"""Liveness and readiness snapshot for the API."""
+type HealthStatus {
+  """PostgreSQL connectivity status."""
+  database: DependencyStatus!
+
+  """Name of the service reporting health."""
+  service: String!
+
+  """Aggregated service status."""
+  status: ServiceStatus!
+
+  """ISO-8601 timestamp when the report was generated."""
+  timestamp: String!
+
+  """Process uptime in seconds."""
+  uptimeSeconds: Float!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+type Mutation {
+  """
+  Deletes a file record and its stored binary, returning the removed file.
+  """
+  deleteFile(id: ID!): File!
+
+  """
+  Restores a workbook to a previous version, archiving the current content as a new version first.
+  """
+  restoreWorkbookVersion(versionId: ID!): Workbook!
+
+  """
+  Creates or overwrites a project workbook, archiving the previous content as a version.
+  """
+  saveWorkbook(input: SaveWorkbookInput!): Workbook!
+
+  """
+  Records metadata for a file binary already stored under its storage key.
+  """
+  uploadFileMetadata(input: UploadFileMetadataInput!): File!
+}
+
+"""A workspace owned by a single user."""
+type Project {
+  """When the project was created."""
+  createdAt: DateTime!
+
+  """Unique project identifier."""
+  id: ID!
+
+  """Human-readable project name."""
+  name: String!
+
+  """Identifier of the user that owns the project."""
+  userId: ID!
+}
+
+type Query {
+  """Returns the current health of the API and its dependencies."""
+  health: HealthStatus!
+
+  """Lists projects, oldest first, with pagination."""
+  projects(
+    """Number of projects to skip before collecting the page."""
+    skip: Int! = 0
+
+    """Maximum number of projects to return (1-100)."""
+    take: Int! = 20
+  ): [Project!]!
+
+  """Returns the workbook for a project, or null if none exists yet."""
+  workbook(projectId: ID!): Workbook
+
+  """Lists the most recent archived versions of a workbook, newest first."""
+  workbookVersions(workbookId: ID!): [WorkbookVersion!]!
+}
+
+"""Input to create or overwrite a project workbook."""
+input SaveWorkbookInput {
+  """ProseMirror/Tiptap document to persist as the workbook content."""
+  content: JSON!
+
+  """Identifier of the project that owns the workbook."""
+  projectId: String!
+}
+
+"""Overall health of the service."""
+enum ServiceStatus {
+  Degraded
+  Ok
+}
+
+"""Metadata describing an already-uploaded file binary."""
+input UploadFileMetadataInput {
+  """IANA media type of the file (allowlist enforced server-side)."""
+  mimeType: String!
+
+  """Human-readable display name of the file."""
+  name: String!
+
+  """Identifier of the project the file belongs to."""
+  projectId: String!
+
+  """Size of the file in bytes."""
+  size: Int!
+
+  """Server-generated storage key locating the binary."""
+  storageKey: String!
+}
+
+"""The current editable document for a project."""
+type Workbook {
+  """ProseMirror/Tiptap document content."""
+  content: JSON!
+
+  """When the workbook was first created."""
+  createdAt: DateTime!
+
+  """Unique workbook identifier."""
+  id: ID!
+
+  """Identifier of the owning project."""
+  projectId: ID!
+
+  """When the workbook content last changed."""
+  updatedAt: DateTime!
+}
+
+"""An immutable snapshot of a workbook captured for version history."""
+type WorkbookVersion {
+  """Archived ProseMirror/Tiptap document content."""
+  content: JSON!
+
+  """When this version was archived."""
+  createdAt: DateTime!
+
+  """Unique version identifier."""
+  id: ID!
+
+  """Identifier of the workbook this version belongs to."""
+  workbookId: ID!
+}

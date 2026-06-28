@@ -38,4 +38,172 @@
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
   }
+
+  /* Honour the user's OS-level reduced-motion preference everywhere: collapse
+     every transition and animation (including the token-driven keyframes below,
+     skeleton pulse, and spinner) to a single instantaneous frame. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Overlay-driven primitives (Dialog, Sheet, Tooltip, Toast) animate via their
+   Radix `data-state` / `data-swipe` attributes. Timing and easing are pulled
+   from the design-token CSS variables so motion stays in lock-step with the
+   rest of the system; the reduced-motion rule above neutralises them. */
+@layer components {
+  .anim-overlay[data-state='open'] {
+    animation: fade-in var(--duration-base) var(--ease-standard);
+  }
+  .anim-overlay[data-state='closed'] {
+    animation: fade-out var(--duration-fast) var(--ease-standard);
+  }
+
+  .anim-dialog[data-state='open'] {
+    animation: dialog-in var(--duration-base) var(--ease-emphasized);
+  }
+  .anim-dialog[data-state='closed'] {
+    animation: dialog-out var(--duration-fast) var(--ease-standard);
+  }
+
+  .anim-sheet-right[data-state='open'] {
+    animation: slide-in-right var(--duration-base) var(--ease-emphasized);
+  }
+  .anim-sheet-right[data-state='closed'] {
+    animation: slide-out-right var(--duration-base) var(--ease-standard);
+  }
+  .anim-sheet-left[data-state='open'] {
+    animation: slide-in-left var(--duration-base) var(--ease-emphasized);
+  }
+  .anim-sheet-left[data-state='closed'] {
+    animation: slide-out-left var(--duration-base) var(--ease-standard);
+  }
+
+  .anim-tooltip[data-state='delayed-open'] {
+    animation: pop-in var(--duration-fast) var(--ease-standard);
+  }
+  .anim-tooltip[data-state='instant-open'] {
+    animation: pop-in var(--duration-fast) var(--ease-standard);
+  }
+
+  .anim-menu {
+    transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+  }
+  .anim-menu[data-state='open'] {
+    animation: pop-in var(--duration-fast) var(--ease-standard);
+  }
+  .anim-menu[data-state='closed'] {
+    animation: fade-out var(--duration-fast) var(--ease-standard);
+  }
+
+  .toast-root[data-state='open'] {
+    animation: slide-in-right var(--duration-base) var(--ease-emphasized);
+  }
+  .toast-root[data-state='closed'] {
+    animation: fade-out var(--duration-fast) var(--ease-standard);
+  }
+  .toast-root[data-swipe='move'] {
+    transform: translateX(var(--radix-toast-swipe-move-x));
+  }
+  .toast-root[data-swipe='cancel'] {
+    transform: translateX(0);
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+  .toast-root[data-swipe='end'] {
+    animation: slide-out-right var(--duration-base) var(--ease-standard);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dialog-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.97);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
