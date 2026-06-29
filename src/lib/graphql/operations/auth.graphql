@@ -1,0 +1,25 @@
+# Authentication operations. Tokens are delivered as httpOnly cookies set by the
+# server, so these operations never see or store the raw JWTs — they only return
+# the authenticated viewer (or a boolean for logout).
+
+mutation Login($input: LoginInput!) {
+  login(input: $input) {
+    ...ViewerFields
+  }
+}
+
+mutation Logout {
+  logout
+}
+
+mutation RefreshToken {
+  refreshToken {
+    ...ViewerFields
+  }
+}
+
+query Me {
+  me {
+    ...ViewerFields
+  }
+}
