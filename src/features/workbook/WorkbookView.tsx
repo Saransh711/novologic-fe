@@ -8,6 +8,7 @@ import { labels, routes } from '@/config';
 import { useWorkbookQuery } from '@/lib/graphql';
 import { AppShell, type NavItem } from '@/components/layout';
 import { Button, Skeleton } from '@/components/ui';
+import { SignOutButton } from '@/features/auth';
 import { SaveStatus } from './SaveStatus';
 import { AiSummaryButton } from './AiSummaryButton';
 import { VersionHistory } from './VersionHistory';
@@ -74,7 +75,10 @@ export function WorkbookView({ projectId }: WorkbookViewProps) {
     <AppShell
       navItems={navItems}
       headerActions={
-        ready ? <SaveStatus status={autosave.status} onRetry={autosave.retry} /> : undefined
+        <div className="flex items-center gap-2">
+          {ready ? <SaveStatus status={autosave.status} onRetry={autosave.retry} /> : null}
+          <SignOutButton />
+        </div>
       }
     >
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">

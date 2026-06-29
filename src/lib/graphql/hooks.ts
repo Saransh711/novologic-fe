@@ -17,9 +17,21 @@ import {
   HealthDocument,
   type HealthQuery,
   type HealthQueryVariables,
+  LoginDocument,
+  type LoginMutation,
+  type LoginMutationVariables,
+  LogoutDocument,
+  type LogoutMutation,
+  type LogoutMutationVariables,
+  MeDocument,
+  type MeQuery,
+  type MeQueryVariables,
   ProjectsDocument,
   type ProjectsQuery,
   type ProjectsQueryVariables,
+  RefreshTokenDocument,
+  type RefreshTokenMutation,
+  type RefreshTokenMutationVariables,
   RestoreWorkbookVersionDocument,
   type RestoreWorkbookVersionMutation,
   type RestoreWorkbookVersionMutationVariables,
@@ -68,9 +80,35 @@ export function useHealthQuery(options?: useQuery.Options<HealthQuery, HealthQue
   return useQuery(HealthDocument, options);
 }
 
+/** Returns the currently authenticated user, or errors with UNAUTHENTICATED. */
+export function useMeQuery(options?: useQuery.Options<MeQuery, MeQueryVariables>) {
+  return useQuery(MeDocument, options);
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Mutations                                                                 */
 /* -------------------------------------------------------------------------- */
+
+/** Authenticates with email + password; the server sets httpOnly auth cookies. */
+export function useLoginMutation(
+  options?: useMutation.Options<LoginMutation, LoginMutationVariables>,
+) {
+  return useMutation(LoginDocument, options);
+}
+
+/** Revokes the current session and clears the auth cookies. */
+export function useLogoutMutation(
+  options?: useMutation.Options<LogoutMutation, LogoutMutationVariables>,
+) {
+  return useMutation(LogoutDocument, options);
+}
+
+/** Rotates the refresh token and re-issues the access token cookie. */
+export function useRefreshTokenMutation(
+  options?: useMutation.Options<RefreshTokenMutation, RefreshTokenMutationVariables>,
+) {
+  return useMutation(RefreshTokenDocument, options);
+}
 
 /** Creates or overwrites a project's workbook, archiving the previous content. */
 export function useSaveWorkbookMutation(

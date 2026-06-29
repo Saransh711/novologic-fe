@@ -1,18 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from '@/features/auth';
 import type { UserInfo } from './types';
 
-
-const SIMULATED_LATENCY_MS = 600;
-
-const PLACEHOLDER_USER: UserInfo = {
-  id: 'demo-user',
-  name: 'Demo User',
-  email: 'demo@workbook.dev',
-  address: '123 Market Street, San Francisco, CA 94103',
-  phone: '+1 (555) 014-2750',
-};
+const NOT_PROVIDED = '—';
 
 export interface UseUserInfoResult {
   data: UserInfo | null | undefined;
@@ -21,31 +12,29 @@ export interface UseUserInfoResult {
   refetch: () => void;
 }
 
+/**
+ * Adapts the authenticated session (from `AuthProvider`) to the `UserInfo`
+ * shape consumed by the user panel. Replaces the previous mock implementation.
+ */
 export function useUserInfo(): UseUserInfoResult {
-  const [data, setData] = useState<UserInfo | null | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [reloadKey, setReloadKey] = useState(0);
+  const { user, loading, refetch } = useAuth();
 
-  useEffect(() => {
-    let active = true;
-    const timer = setTimeout(() => {
-      if (!active) return;
-      setData(PLACEHOLDER_USER);
-      setLoading(false);
-    }, SIMULATED_LATENCY_MS);
-    return () => {
-      active = false;
-      clearTimeout(timer);
-    };
-  }, [reloadKey]);
+  const data: UserInfo | null | undefined = user
+    ? {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        address: user.address ?? NOT_PROVIDED,
+        phone: user.phone ?? NOT_PROVIDED,
+      }
+    : loading
+      ? undefined
+      : null;
 
-  const refetch = useCallback(() => {
-    setData(undefined);
-    setError(undefined);
-    setLoading(true);
-    setReloadKey((key) => key + 1);
-  }, []);
-
-  return { data, loading, error, refetch };
+  return {
+    data,
+    loading,
+    error: undefined,
+    refetch: () => void refetch(),
+  };
 }

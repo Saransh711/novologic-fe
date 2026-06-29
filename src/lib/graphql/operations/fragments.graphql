@@ -33,3 +33,12 @@ fragment FileFields on File {
   storageKey
   createdAt
 }
+
+fragment ViewerFields on Viewer {
+  id
+  name
+  email
+  phone
+  address
+  createdAt
+}

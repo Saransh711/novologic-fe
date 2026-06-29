@@ -8,6 +8,7 @@ import { fadeInUp, staggerContainer } from '@/design/motion';
 import { useProjectsQuery, type ProjectFieldsFragment } from '@/lib/graphql';
 import { AppShell, type NavItem } from '@/components/layout';
 import { Button, Card, Skeleton } from '@/components/ui';
+import { SignOutButton } from '@/features/auth';
 import { focusRing } from '@/components/ui/styles';
 import { formatDate } from '@/lib/utils/formatDate';
 import { cn } from '@/lib/utils/cn';
@@ -99,7 +100,7 @@ export function ProjectsView() {
   const projects = data?.projects ?? [];
 
   return (
-    <AppShell navItems={navItems}>
+    <AppShell navItems={navItems} headerActions={<SignOutButton />}>
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
         <header className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold tracking-tight text-balance text-foreground">

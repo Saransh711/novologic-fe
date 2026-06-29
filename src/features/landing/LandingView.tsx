@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'motion/react';
-import { FileUp, History, NotebookPen, Save } from 'lucide-react';
+import { FileUp, History, LogIn, NotebookPen, Save } from 'lucide-react';
 import { app, editor, labels, routes, upload } from '@/config';
 import { fadeInUp, staggerContainer } from '@/design/motion';
 import { Button, Card, CardDescription, CardHeader, CardTitle, ThemeToggle } from '@/components/ui';
+import { useAuth } from '@/features/auth';
 import { UserInfoPanel } from '@/features/user';
 
 const features = [
@@ -28,6 +29,7 @@ const features = [
 
 export function LandingView() {
   const router = useRouter();
+  const { user, loading } = useAuth();
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-5xl flex-col px-6 py-8 sm:px-8">
@@ -36,7 +38,19 @@ export function LandingView() {
           <NotebookPen className="h-5 w-5 text-primary" aria-hidden />
           {app.name}
         </span>
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          {!loading && !user ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => router.push(routes.login)}
+              leadingIcon={<LogIn className="h-4 w-4" aria-hidden />}
+            >
+              {labels.auth.signIn}
+            </Button>
+          ) : null}
+          <ThemeToggle />
+        </div>
       </header>
 
       <UserInfoPanel className="mt-6" />
