@@ -6,7 +6,7 @@ import { FileUp, History, LogIn, NotebookPen, Save } from 'lucide-react';
 import { app, editor, labels, routes, upload } from '@/config';
 import { fadeInUp, staggerContainer } from '@/design/motion';
 import { Button, Card, CardDescription, CardHeader, CardTitle, ThemeToggle } from '@/components/ui';
-import { useAuth } from '@/features/auth';
+import { SignOutButton, useAuth } from '@/features/auth';
 import { UserInfoPanel } from '@/features/user';
 
 const features = [
@@ -49,6 +49,7 @@ export function LandingView() {
               {labels.auth.signIn}
             </Button>
           ) : null}
+          {!loading && user ? <SignOutButton /> : null}
           <ThemeToggle />
         </div>
       </header>
