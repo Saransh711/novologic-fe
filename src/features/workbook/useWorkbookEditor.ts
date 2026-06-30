@@ -17,6 +17,31 @@ function filesFrom(list: FileList | null | undefined): File[] {
   return list && list.length > 0 ? Array.from(list) : [];
 }
 
+/**
+ * Serializes a document with object keys sorted at every level. The backend
+ * stores workbook content as Postgres `jsonb`, which does not preserve key
+ * order, so a plain `JSON.stringify` comparison against `editor.getJSON()`
+ * always differs even when nothing changed. That false mismatch would re-run
+ * `setContent` on every autosave echo, rebuilding the document and tearing down
+ * in-progress node views (e.g. a PDF mid-render). Comparing canonical forms
+ * makes our own saved content compare equal while genuine external changes
+ * (like a version restore) still differ.
+ */
+function canonicalJson(value: unknown): string {
+  return JSON.stringify(value, (_key, val) => {
+    if (val && typeof val === 'object' && !Array.isArray(val)) {
+      const record = val as Record<string, unknown>;
+      return Object.keys(record)
+        .sort()
+        .reduce<Record<string, unknown>>((sorted, key) => {
+          sorted[key] = record[key];
+          return sorted;
+        }, {});
+    }
+    return val;
+  });
+}
+
 export function useWorkbookEditor({
   content,
   editable = true,
@@ -72,7 +97,7 @@ export function useWorkbookEditor({
 
   useEffect(() => {
     if (!editor || content == null) return;
-    if (JSON.stringify(editor.getJSON()) === JSON.stringify(content)) return;
+    if (canonicalJson(editor.getJSON()) === canonicalJson(content)) return;
     queueMicrotask(() => {
       if (editor.isDestroyed) return;
       editor.commands.setContent(content, { emitUpdate: false });
