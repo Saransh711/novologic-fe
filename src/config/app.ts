@@ -134,6 +134,9 @@ export const labels = {
       openInNewTab: 'Open PDF in a new tab',
       previewLabel: (name: string) => `PDF preview: ${name}`,
       untitled: 'PDF document',
+      loading: 'Rendering PDF…',
+      loadError: 'Couldn’t render this PDF.',
+      pageLabel: (page: number, total: number) => `Page ${page} of ${total}`,
     },
   },
   a11y: {
